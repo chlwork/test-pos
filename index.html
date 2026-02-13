@@ -1,441 +1,404 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #4689cc; -webkit-text-stroke: #4689cc}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #c27e65; -webkit-text-stroke: #c27e65}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #8cd3fe; -webkit-text-stroke: #8cd3fe}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca; min-height: 16.0px}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #6d7378; -webkit-text-stroke: #6d7378}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #71c083; -webkit-text-stroke: #71c083}
-    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #3874c0; -webkit-text-stroke: #3874c0; min-height: 16.0px}
-    span.s1 {font-kerning: none; background-color: #171818}
-    span.s2 {font-kerning: none; color: #8cd3fe; background-color: #171818; -webkit-text-stroke: 0px #8cd3fe}
-    span.s3 {font-kerning: none; color: #6d6d6d; background-color: #171818; -webkit-text-stroke: 0px #6d6d6d}
-    span.s4 {font-kerning: none; color: #4689cc; background-color: #171818; -webkit-text-stroke: 0px #4689cc}
-    span.s5 {font-kerning: none; color: #cacaca; background-color: #171818; -webkit-text-stroke: 0px #cacaca}
-    span.s6 {font-kerning: none; color: #c27e65; background-color: #171818; -webkit-text-stroke: 0px #c27e65}
-    span.s7 {font-kerning: none; color: #b76ff7; background-color: #171818; -webkit-text-stroke: 0px #b76ff7}
-    span.s8 {font-kerning: none; color: #d4d4d4; background-color: #171818; -webkit-text-stroke: 0px #d4d4d4}
-    span.s9 {font-kerning: none}
-    span.s10 {font-kerning: none; color: #71c083; background-color: #171818; -webkit-text-stroke: 0px #71c083}
-    span.s11 {font-kerning: none; color: #a7c598; background-color: #171818; -webkit-text-stroke: 0px #a7c598}
-    span.s12 {font-kerning: none; color: #36c0a0; background-color: #171818; -webkit-text-stroke: 0px #36c0a0}
-    span.s13 {font-kerning: none; color: #f67c30; background-color: #171818; -webkit-text-stroke: 0px #f67c30}
-    span.s14 {font-kerning: none; color: #ee2e38; background-color: #171818; -webkit-text-stroke: 0px #ee2e38}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>市集行動 POS 系統</title>
+    
+    <!-- PWA 與 行動端優化標籤 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="市集POS">
+    <meta name="theme-color" content="#4338ca">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        
+        :root {
+            --safe-area-inset-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f1f5f9;
+            overscroll-behavior-y: contain;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .product-card:active {
+            transform: scale(0.92);
+            background-color: #e2e8f0;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @media (max-width: 767px) {
+            #view-cart {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 40;
+                height: 75vh;
+                transform: translateY(calc(75vh - 64px));
+                transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.1);
+                border-radius: 24px 24px 0 0;
+            }
+            #view-cart.expanded {
+                transform: translateY(0);
+            }
+            .drawer-handle { display: block; }
+        }
+        
+        @media (min-width: 768px) {
+            #view-cart { height: auto; transform: none !important; border-radius: 0; }
+            .drawer-handle { display: none; }
+        }
+
+        .pb-safe { padding-bottom: calc(1rem + var(--safe-area-inset-bottom)); }
+    </style>
 </head>
-<body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE</span><span class="s2"> html</span><span class="s1">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s4">html</span><span class="s5"> </span><span class="s2">lang</span><span class="s3">=</span><span class="s1">"zh-TW"</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s1">charset</span><span class="s3">=</span><span class="s6">"UTF-8"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"viewport"</span><span class="s5"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">title</span><span class="s3">&gt;</span><span class="s1">市集行動 POS 系統</span><span class="s3">&lt;/</span><span class="s4">title</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p6"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s1">&lt;!-- PWA 與 行動端優化標籤 --&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"apple-mobile-web-app-capable"</span><span class="s5"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"yes"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"apple-mobile-web-app-status-bar-style"</span><span class="s5"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"black-translucent"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"apple-mobile-web-app-title"</span><span class="s5"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"市集POS"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">meta</span><span class="s5"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"theme-color"</span><span class="s5"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"#4338ca"</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">    </span></span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.tailwindcss.com"</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">script</span><span class="s5"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://unpkg.com/lucide@latest"</span><span class="s3">&gt;&lt;/</span><span class="s4">script</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s7">@import</span><span class="s5"> </span><span class="s6">url</span><span class="s8">(</span><span class="s1">'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;display=swap'</span><span class="s8">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s4">:root</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s2">--safe-area-inset-bottom:</span><span class="s5"> </span><span class="s1">env(safe-area-inset-bottom)</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s4">body</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">font-family:</span><span class="s1"> </span><span class="s10">'Noto Sans TC'</span><span class="s8">,</span><span class="s1"> </span><span class="s6">sans-serif</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background-color:</span><span class="s1"> #f1f5f9</span><span class="s8">;</span></p>
-<p class="p3"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s1">overscroll-behavior-y:</span><span class="s5"> </span><span class="s6">contain</span><span class="s8">;</span></p>
-<p class="p3"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s1">-webkit-tap-highlight-color:</span><span class="s5"> </span><span class="s6">transparent</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s1">.product-card:active</span><span class="s5"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">transform:</span><span class="s1"> </span><span class="s6">scale(</span><span class="s11">0.92</span><span class="s6">)</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background-color:</span><span class="s1"> #e2e8f0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s1">.no-scrollbar::-webkit-scrollbar</span><span class="s5"> </span><span class="s8">{</span><span class="s5"> </span><span class="s2">display:</span><span class="s5"> </span><span class="s6">none</span><span class="s8">;</span><span class="s5"> </span><span class="s8">}</span></p>
-<p class="p3"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s4">.no-scrollbar</span><span class="s5"> </span><span class="s8">{</span><span class="s5"> </span><span class="s1">-ms-overflow-style:</span><span class="s5"> </span><span class="s6">none</span><span class="s8">;</span><span class="s5"> </span><span class="s1">scrollbar-width:</span><span class="s5"> </span><span class="s6">none</span><span class="s8">;</span><span class="s5"> </span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>@</span><span class="s4">media</span><span class="s1"> (</span><span class="s4">max-width:</span><span class="s1"> 767</span><span class="s4">px</span><span class="s1">) </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>#view-cart {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">position:</span><span class="s1"> </span><span class="s6">fixed</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">bottom:</span><span class="s1"> </span><span class="s11">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">left:</span><span class="s1"> </span><span class="s11">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">right:</span><span class="s1"> </span><span class="s11">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">z-index:</span><span class="s1"> </span><span class="s11">40</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s11">75vh</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">transform:</span><span class="s1"> </span><span class="s6">translateY(calc(</span><span class="s11">75vh</span><span class="s1"> </span><span class="s8">-</span><span class="s1"> </span><span class="s11">64px</span><span class="s6">))</span><span class="s8">;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s2">transition:</span><span class="s5"> </span><span class="s1">transform</span><span class="s5"> </span><span class="s11">0.4s</span><span class="s5"> </span><span class="s1">cubic-bezier(</span><span class="s11">0.18</span><span class="s8">,</span><span class="s5"> </span><span class="s11">0.89</span><span class="s8">,</span><span class="s5"> </span><span class="s11">0.32</span><span class="s8">,</span><span class="s5"> </span><span class="s11">1.1</span><span class="s1">)</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">border-radius:</span><span class="s1"> </span><span class="s11">24px</span><span class="s1"> </span><span class="s11">24px</span><span class="s1"> </span><span class="s11">0</span><span class="s1"> </span><span class="s11">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s1">#view-cart.expanded</span><span class="s5"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">transform:</span><span class="s1"> </span><span class="s6">translateY(</span><span class="s11">0</span><span class="s6">)</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s4">.drawer-handle</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> </span><span class="s2">display:</span><span class="s1"> </span><span class="s6">block</span><span class="s8">;</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>@</span><span class="s4">media</span><span class="s1"> (</span><span class="s4">min-width:</span><span class="s1"> 768</span><span class="s4">px</span><span class="s1">) </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>#view-cart { </span><span class="s2">height:</span><span class="s1"> </span><span class="s6">auto</span><span class="s8">;</span><span class="s1"> </span><span class="s2">transform:</span><span class="s1"> </span><span class="s6">none</span><span class="s1"> </span><span class="s7">!important</span><span class="s8">;</span><span class="s1"> </span><span class="s2">border-radius:</span><span class="s1"> </span><span class="s11">0</span><span class="s8">;</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s4">.drawer-handle</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> </span><span class="s2">display:</span><span class="s1"> </span><span class="s6">none</span><span class="s8">;</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s4">.pb-safe</span><span class="s5"> </span><span class="s8">{</span><span class="s5"> </span><span class="s2">padding-bottom:</span><span class="s5"> </span><span class="s1">calc(</span><span class="s11">1rem</span><span class="s5"> </span><span class="s8">+</span><span class="s5"> </span><span class="s1">var(--safe-area-inset-bottom))</span><span class="s8">;</span><span class="s5"> </span><span class="s8">}</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s3">&lt;</span><span class="s4">body</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"h-screen flex flex-col overflow-hidden text-gray-800"</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">header</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-indigo-700 text-white p-4 shadow-lg flex justify-between items-center shrink-0 z-20 pt-[calc(1rem+env(safe-area-inset-top))]"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s4">h1</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-lg font-bold flex items-center gap-2"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">i</span><span class="s5"> </span><span class="s1">data-lucide</span><span class="s3">=</span><span class="s6">"store"</span><span class="s5"> </span><span class="s1">class</span><span class="s3">=</span><span class="s6">"w-5 h-5"</span><span class="s3">&gt;&lt;/</span><span class="s4">i</span><span class="s3">&gt;</span><span class="s5"><span class="Apple-converted-space"> </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">span</span><span class="s3">&gt;</span><span class="s1">市集 POS</span><span class="s3">&lt;/</span><span class="s4">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s4">h1</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s4">nav</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex bg-indigo-800 rounded-lg p-1"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">button</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"switchTab('pos')"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"tab-pos"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"px-3 py-1.5 rounded-md text-sm font-medium transition bg-indigo-600 shadow"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>點餐</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">button</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">button</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"switchTab('history')"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"tab-history"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"px-3 py-1.5 rounded-md text-sm font-medium transition"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>營收</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">button</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">button</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"switchTab('settings')"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"tab-settings"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"px-3 py-1.5 rounded-md text-sm font-medium transition"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>管理</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">button</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s4">nav</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">header</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">main</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex-1 relative overflow-hidden bg-gray-100 flex flex-col md:flex-row"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex-1 relative flex flex-col overflow-hidden"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">section</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"view-pos"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"view-section flex-1 p-3 overflow-y-auto no-scrollbar space-y-6"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"product-list-container"</span><span class="s3">&gt;&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"h-32 md:hidden"</span><span class="s3">&gt;&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">section</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">section</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"view-history"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"view-section hidden flex-1 p-4 overflow-y-auto no-scrollbar"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"max-w-2xl mx-auto space-y-4"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex justify-between items-end"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">h2</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"text-xl font-bold"</span><span class="s3">&gt;</span><span class="s1">銷售紀錄</span><span class="s3">&lt;/</span><span class="s4">h2</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">button</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"clearHistory()"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-xs text-red-400"</span><span class="s3">&gt;</span><span class="s5">清除紀錄</span><span class="s3">&lt;/</span><span class="s4">button</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-indigo-700 text-white p-6 rounded-3xl shadow-lg"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"text-indigo-200 text-sm"</span><span class="s3">&gt;</span><span class="s1">今日累計營收</span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-4xl font-black font-mono mt-1"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"history-total-revenue"</span><span class="s3">&gt;</span><span class="s5">$ 0</span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-xs mt-2 opacity-70"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"history-count"</span><span class="s3">&gt;</span><span class="s5">共 0 筆交易</span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"history-list"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"space-y-3"</span><span class="s3">&gt;&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">section</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">section</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"view-settings"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"view-section hidden flex-1 p-4 overflow-y-auto no-scrollbar"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"max-w-2xl mx-auto space-y-6"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-white p-5 rounded-2xl shadow-sm border border-gray-200"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">h3</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"font-bold mb-4 flex items-center gap-2"</span><span class="s3">&gt;&lt;</span><span class="s4">i</span><span class="s5"> </span><span class="s2">data-lucide</span><span class="s3">=</span><span class="s1">"plus-circle"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-5 h-5 text-green-500"</span><span class="s3">&gt;&lt;/</span><span class="s4">i</span><span class="s3">&gt;</span><span class="s5"> 新增商品</span><span class="s3">&lt;/</span><span class="s4">h3</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"space-y-3"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"flex gap-2"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                                </span></span><span class="s3">&lt;</span><span class="s4">input</span><span class="s5"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"text"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"new-p-name"</span><span class="s5"> </span><span class="s2">placeholder</span><span class="s3">=</span><span class="s1">"名稱"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex-1 border-2 border-gray-100 p-3 rounded-xl outline-none focus:border-green-500"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                                </span></span><span class="s3">&lt;</span><span class="s4">input</span><span class="s5"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"number"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"new-p-price"</span><span class="s5"> </span><span class="s2">placeholder</span><span class="s3">=</span><span class="s1">"價格"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-24 border-2 border-gray-100 p-3 rounded-xl outline-none focus:border-green-500"</span><span class="s5"> </span><span class="s2">inputmode</span><span class="s3">=</span><span class="s1">"numeric"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"flex gap-2"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                                </span></span><span class="s3">&lt;</span><span class="s4">select</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"new-p-category"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex-1 border-2 border-gray-100 p-3 rounded-xl bg-white"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                                    </span></span><span class="s3">&lt;</span><span class="s4">option</span><span class="s1"> </span><span class="s2">value</span><span class="s3">=</span><span class="s6">"預設群組"</span><span class="s3">&gt;</span><span class="s1">預設群組</span><span class="s3">&lt;/</span><span class="s4">option</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                                    </span></span><span class="s3">&lt;</span><span class="s4">option</span><span class="s1"> </span><span class="s2">value</span><span class="s3">=</span><span class="s6">"飲品"</span><span class="s3">&gt;</span><span class="s1">飲品</span><span class="s3">&lt;/</span><span class="s4">option</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                                    </span></span><span class="s3">&lt;</span><span class="s4">option</span><span class="s1"> </span><span class="s2">value</span><span class="s3">=</span><span class="s6">"甜點"</span><span class="s3">&gt;</span><span class="s1">甜點</span><span class="s3">&lt;/</span><span class="s4">option</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                                    </span></span><span class="s3">&lt;</span><span class="s4">option</span><span class="s1"> </span><span class="s2">value</span><span class="s3">=</span><span class="s6">"custom"</span><span class="s3">&gt;</span><span class="s1">+ 自定義群組</span><span class="s3">&lt;/</span><span class="s4">option</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                                </span></span><span class="s3">&lt;/</span><span class="s4">select</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                                </span></span><span class="s3">&lt;</span><span class="s4">input</span><span class="s5"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"text"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"custom-category"</span><span class="s5"> </span><span class="s2">placeholder</span><span class="s3">=</span><span class="s1">"新群組名稱"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"hidden flex-1 border-2 border-gray-100 p-3 rounded-xl outline-none focus:border-green-500"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                                </span></span><span class="s3">&lt;</span><span class="s4">button</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"addProduct()"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-green-600 text-white px-6 py-3 rounded-xl font-bold shrink-0"</span><span class="s3">&gt;</span><span class="s5">新增</span><span class="s3">&lt;/</span><span class="s4">button</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"p-4 bg-gray-50 border-b font-bold"</span><span class="s3">&gt;</span><span class="s5">商品管理</span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"settings-list"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"divide-y divide-gray-100"</span><span class="s3">&gt;&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">section</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s4">aside</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"view-cart"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex w-full md:w-96 bg-white border-l border-gray-200 flex-col shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.3)] md:shadow-xl"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"toggleCart()"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"drawer-handle w-full py-2 bg-white flex flex-col items-center cursor-pointer border-b"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-12 h-1.5 bg-gray-200 rounded-full mb-2"</span><span class="s3">&gt;&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex items-center gap-2 text-indigo-700 font-bold"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">i</span><span class="s5"> </span><span class="s2">data-lucide</span><span class="s3">=</span><span class="s1">"receipt-text"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-4 h-4"</span><span class="s3">&gt;&lt;/</span><span class="s4">i</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">span</span><span class="s3">&gt;</span><span class="s1">結帳明細</span><span class="s3">&lt;/</span><span class="s4">span</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">span</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"cart-count-badge"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full"</span><span class="s3">&gt;</span><span class="s5">0</span><span class="s3">&lt;/</span><span class="s4">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"hidden md:flex p-4 border-b justify-between items-center bg-white"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">h2</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"font-bold text-lg text-indigo-700"</span><span class="s3">&gt;</span><span class="s5">明細清單</span><span class="s3">&lt;/</span><span class="s4">h2</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">button</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"clearCart()"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-gray-400 text-sm"</span><span class="s3">&gt;</span><span class="s5">清空</span><span class="s3">&lt;/</span><span class="s4">button</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"cart-items"</span><span class="s3">&gt;&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"p-4 bg-gray-50 border-t space-y-4 pb-safe"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"space-y-2"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex justify-between items-center"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">span</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"text-sm text-gray-500"</span><span class="s3">&gt;</span><span class="s1">總計金額</span><span class="s3">&lt;/</span><span class="s4">span</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">span</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"total-amount"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-2xl font-bold text-indigo-600"</span><span class="s3">&gt;</span><span class="s5">$ 0</span><span class="s3">&lt;/</span><span class="s4">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"grid grid-cols-2 gap-3"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s6">"relative"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;</span><span class="s4">span</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"absolute left-3 top-1 text-[10px] text-gray-400"</span><span class="s3">&gt;</span><span class="s5">實收</span><span class="s3">&lt;/</span><span class="s4">span</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;</span><span class="s4">input</span><span class="s5"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"number"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"cash-received"</span><span class="s5"> </span><span class="s2">oninput</span><span class="s3">=</span><span class="s1">"calculateChange()"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-full bg-white border-2 border-gray-200 pt-5 pb-2 px-3 rounded-xl text-lg font-mono outline-none"</span><span class="s5"> </span><span class="s2">inputmode</span><span class="s3">=</span><span class="s1">"numeric"</span><span class="s5"> </span><span class="s2">placeholder</span><span class="s3">=</span><span class="s1">"0"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"relative bg-gray-100 rounded-xl px-3 pt-5 pb-2"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;</span><span class="s4">span</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"absolute left-3 top-1 text-[10px] text-gray-400"</span><span class="s3">&gt;</span><span class="s5">找零</span><span class="s3">&lt;/</span><span class="s4">span</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                            </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"change-amount"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-lg font-mono text-red-500 font-bold"</span><span class="s3">&gt;</span><span class="s5">$ 0</span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">button</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"checkout()"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-full bg-indigo-600 text-white py-4 rounded-2xl text-xl font-bold shadow-lg active:scale-95 transition-all"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>結帳完成</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s4">button</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s4">aside</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s4">main</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"success-modal"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"fixed inset-0 bg-black/60 hidden flex items-center justify-center p-6 z-50 backdrop-blur-sm"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"bg-white p-8 rounded-3xl max-w-sm w-full text-center space-y-6"</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">div</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s4">i</span><span class="s1"> </span><span class="s2">data-lucide</span><span class="s3">=</span><span class="s6">"check"</span><span class="s1"> </span><span class="s2">size</span><span class="s3">=</span><span class="s6">"40"</span><span class="s3">&gt;&lt;/</span><span class="s4">i</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">h3</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-2xl font-bold text-gray-800"</span><span class="s3">&gt;</span><span class="s5">結帳完成</span><span class="s3">&lt;/</span><span class="s4">h3</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">p</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-gray-500"</span><span class="s5"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"modal-summary"</span><span class="s3">&gt;&lt;/</span><span class="s4">p</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s5"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s4">button</span><span class="s5"> </span><span class="s2">onclick</span><span class="s3">=</span><span class="s1">"closeModal()"</span><span class="s5"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold"</span><span class="s3">&gt;</span><span class="s5">接待下位客戶</span><span class="s3">&lt;/</span><span class="s4">button</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s4">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">let</span><span class="s1"> products </span><span class="s8">=</span><span class="s1"> </span><span class="s12">JSON</span><span class="s8">.</span><span class="s1">parse</span><span class="s8">(</span><span class="s1">localStorage</span><span class="s8">.</span><span class="s1">getItem</span><span class="s8">(</span><span class="s10">'pos_products'</span><span class="s8">))</span><span class="s1"> </span><span class="s8">||</span><span class="s1"> </span><span class="s8">[</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">{</span><span class="s1"> id</span><span class="s8">:</span><span class="s1"> </span><span class="s13">1</span><span class="s8">,</span><span class="s1"> name</span><span class="s8">:</span><span class="s1"> </span><span class="s10">'招牌咖啡'</span><span class="s8">,</span><span class="s1"> price</span><span class="s8">:</span><span class="s1"> </span><span class="s13">120</span><span class="s8">,</span><span class="s1"> category</span><span class="s8">:</span><span class="s1"> </span><span class="s10">'飲品'</span><span class="s1"> </span><span class="s8">},</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">{</span><span class="s1"> id</span><span class="s8">:</span><span class="s1"> </span><span class="s13">2</span><span class="s8">,</span><span class="s1"> name</span><span class="s8">:</span><span class="s1"> </span><span class="s10">'精品手沖'</span><span class="s8">,</span><span class="s1"> price</span><span class="s8">:</span><span class="s1"> </span><span class="s13">150</span><span class="s8">,</span><span class="s1"> category</span><span class="s8">:</span><span class="s1"> </span><span class="s10">'飲品'</span><span class="s1"> </span><span class="s8">},</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">{</span><span class="s1"> id</span><span class="s8">:</span><span class="s1"> </span><span class="s13">3</span><span class="s8">,</span><span class="s1"> name</span><span class="s8">:</span><span class="s1"> </span><span class="s10">'巧克力蛋糕'</span><span class="s8">,</span><span class="s1"> price</span><span class="s8">:</span><span class="s1"> </span><span class="s13">80</span><span class="s8">,</span><span class="s1"> category</span><span class="s8">:</span><span class="s1"> </span><span class="s10">'甜點'</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">let</span><span class="s1"> salesHistory </span><span class="s8">=</span><span class="s1"> </span><span class="s12">JSON</span><span class="s8">.</span><span class="s1">parse</span><span class="s8">(</span><span class="s1">localStorage</span><span class="s8">.</span><span class="s1">getItem</span><span class="s8">(</span><span class="s10">'pos_history'</span><span class="s8">))</span><span class="s1"> </span><span class="s8">||</span><span class="s1"> </span><span class="s8">[];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">let</span><span class="s1"> cart </span><span class="s8">=</span><span class="s1"> </span><span class="s8">[];</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>window</span><span class="s8">.</span><span class="s1">onload </span><span class="s8">=</span><span class="s1"> </span><span class="s8">()</span><span class="s1"> </span><span class="s8">=&gt;</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>renderProducts</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>renderSettings</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>renderHistory</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>updateCartBadge</span><span class="s8">();</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'new-p-category'</span><span class="s8">).</span><span class="s1">addEventListener</span><span class="s8">(</span><span class="s10">'change'</span><span class="s8">,</span><span class="s1"> </span><span class="s8">(</span><span class="s1">e</span><span class="s8">)</span><span class="s1"> </span><span class="s8">=&gt;</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">const</span><span class="s1"> customInput </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'custom-category'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">e</span><span class="s8">.</span><span class="s1">target</span><span class="s8">.</span><span class="s1">value </span><span class="s8">===</span><span class="s1"> </span><span class="s10">'custom'</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>customInput</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">remove</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>e</span><span class="s8">.</span><span class="s1">target</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">add</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>customInput</span><span class="s8">.</span><span class="s1">focus</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>lucide</span><span class="s8">.</span><span class="s1">createIcons</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">};</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> switchTab</span><span class="s8">(</span><span class="s1">tab</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">querySelectorAll</span><span class="s8">(</span><span class="s10">'.view-section'</span><span class="s8">).</span><span class="s1">forEach</span><span class="s8">(</span><span class="s1">s </span><span class="s8">=&gt;</span><span class="s1"> s</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">add</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">));</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">`view-</span><span class="s8">${</span><span class="s1">tab</span><span class="s8">}</span><span class="s10">`</span><span class="s8">).</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">remove</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">querySelectorAll</span><span class="s8">(</span><span class="s10">'nav button'</span><span class="s8">).</span><span class="s1">forEach</span><span class="s8">(</span><span class="s1">b </span><span class="s8">=&gt;</span><span class="s1"> b</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">remove</span><span class="s8">(</span><span class="s10">'bg-indigo-600'</span><span class="s8">,</span><span class="s1"> </span><span class="s10">'shadow'</span><span class="s8">));</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">`tab-</span><span class="s8">${</span><span class="s1">tab</span><span class="s8">}</span><span class="s10">`</span><span class="s8">).</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">add</span><span class="s8">(</span><span class="s10">'bg-indigo-600'</span><span class="s8">,</span><span class="s1"> </span><span class="s10">'shadow'</span><span class="s8">);</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> cartEl </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'view-cart'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">(</span><span class="s1">tab </span><span class="s8">===</span><span class="s1"> </span><span class="s10">'pos'</span><span class="s8">)</span><span class="s1"> </span><span class="s8">?</span><span class="s1"> cartEl</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">add</span><span class="s8">(</span><span class="s10">'flex'</span><span class="s8">)</span><span class="s1"> </span><span class="s8">:</span><span class="s1"> cartEl</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">remove</span><span class="s8">(</span><span class="s10">'flex'</span><span class="s8">,</span><span class="s1"> </span><span class="s10">'hidden'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">tab </span><span class="s8">!==</span><span class="s1"> </span><span class="s10">'pos'</span><span class="s8">)</span><span class="s1"> cartEl</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">add</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">);</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s8">(</span><span class="s1">tab </span><span class="s8">===</span><span class="s1"> </span><span class="s10">'history'</span><span class="s8">)</span><span class="s1"> renderHistory</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>lucide</span><span class="s8">.</span><span class="s1">createIcons</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> toggleCart</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'view-cart'</span><span class="s8">).</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">toggle</span><span class="s8">(</span><span class="s10">'expanded'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> renderProducts</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> container </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'product-list-container'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>container</span><span class="s8">.</span><span class="s1">innerHTML </span><span class="s8">=</span><span class="s1"> </span><span class="s10">''</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> groups </span><span class="s8">=</span><span class="s1"> products</span><span class="s8">.</span><span class="s1">reduce</span><span class="s8">((</span><span class="s1">acc</span><span class="s8">,</span><span class="s1"> p</span><span class="s8">)</span><span class="s1"> </span><span class="s8">=&gt;</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">const</span><span class="s1"> cat </span><span class="s8">=</span><span class="s1"> p</span><span class="s8">.</span><span class="s1">category </span><span class="s8">||</span><span class="s1"> </span><span class="s10">'預設'</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(!</span><span class="s1">acc</span><span class="s8">[</span><span class="s1">cat</span><span class="s8">])</span><span class="s1"> acc</span><span class="s8">[</span><span class="s1">cat</span><span class="s8">]</span><span class="s1"> </span><span class="s8">=</span><span class="s1"> </span><span class="s8">[];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>acc</span><span class="s8">[</span><span class="s1">cat</span><span class="s8">].</span><span class="s1">push</span><span class="s8">(</span><span class="s1">p</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">return</span><span class="s1"> acc</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">},</span><span class="s1"> </span><span class="s8">{});</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s12">Object</span><span class="s8">.</span><span class="s1">keys</span><span class="s8">(</span><span class="s1">groups</span><span class="s8">).</span><span class="s1">sort</span><span class="s8">().</span><span class="s1">forEach</span><span class="s8">(</span><span class="s1">group </span><span class="s8">=&gt;</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">const</span><span class="s1"> section </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">createElement</span><span class="s8">(</span><span class="s10">'div'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>section</span><span class="s8">.</span><span class="s1">className </span><span class="s8">=</span><span class="s1"> </span><span class="s10">'mb-6'</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>section</span><span class="s8">.</span><span class="s1">innerHTML </span><span class="s8">=</span><span class="s1"> </span><span class="s10">`</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xs font-bold text-gray-400 mb-2 px-1 uppercase tracking-wider"&gt;</span><span class="s8">${</span><span class="s5">group</span><span class="s8">}</span><span class="s1">&lt;/h3&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s8">${</span><span class="s5">groups</span><span class="s8">[</span><span class="s5">group</span><span class="s8">].</span><span class="s5">map</span><span class="s8">(</span><span class="s5">p </span><span class="s8">=&gt;</span><span class="s5"> </span><span class="s1">`</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="addToCart(</span><span class="s8">${</span><span class="s5">p</span><span class="s8">.</span><span class="s5">id</span><span class="s8">}</span><span class="s1">)" class="product-card bg-white p-4 h-24 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center transition-all"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;span class="text-sm font-bold text-gray-700"&gt;</span><span class="s8">${</span><span class="s5">p</span><span class="s8">.</span><span class="s5">name</span><span class="s8">}</span><span class="s1">&lt;/span&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;span class="text-indigo-600 font-mono font-bold"&gt;</span><span class="s14">$</span><span class="s8">${</span><span class="s5">p</span><span class="s8">.</span><span class="s5">price</span><span class="s8">}</span><span class="s1">&lt;/span&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/button&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>`</span><span class="s8">).</span><span class="s5">join</span><span class="s8">(</span><span class="s1">''</span><span class="s8">)}</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                </span>`</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>container</span><span class="s8">.</span><span class="s1">appendChild</span><span class="s8">(</span><span class="s1">section</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>lucide</span><span class="s8">.</span><span class="s1">createIcons</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> addToCart</span><span class="s8">(</span><span class="s1">pid</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> prod </span><span class="s8">=</span><span class="s1"> products</span><span class="s8">.</span><span class="s1">find</span><span class="s8">(</span><span class="s1">p </span><span class="s8">=&gt;</span><span class="s1"> p</span><span class="s8">.</span><span class="s1">id </span><span class="s8">===</span><span class="s1"> pid</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> item </span><span class="s8">=</span><span class="s1"> cart</span><span class="s8">.</span><span class="s1">find</span><span class="s8">(</span><span class="s1">i </span><span class="s8">=&gt;</span><span class="s1"> i</span><span class="s8">.</span><span class="s1">id </span><span class="s8">===</span><span class="s1"> pid</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">item</span><span class="s8">)</span><span class="s1"> item</span><span class="s8">.</span><span class="s1">qty</span><span class="s8">++;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">else</span><span class="s1"> cart</span><span class="s8">.</span><span class="s1">push</span><span class="s8">({</span><span class="s1"> </span><span class="s8">...</span><span class="s1">prod</span><span class="s8">,</span><span class="s1"> qty</span><span class="s8">:</span><span class="s1"> </span><span class="s13">1</span><span class="s1"> </span><span class="s8">});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">navigator</span><span class="s8">.</span><span class="s1">vibrate</span><span class="s8">)</span><span class="s1"> navigator</span><span class="s8">.</span><span class="s1">vibrate</span><span class="s8">(</span><span class="s13">10</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>renderCart</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>updateCartBadge</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> removeFromCart</span><span class="s8">(</span><span class="s1">id</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>cart </span><span class="s8">=</span><span class="s1"> cart</span><span class="s8">.</span><span class="s1">filter</span><span class="s8">(</span><span class="s1">i </span><span class="s8">=&gt;</span><span class="s1"> i</span><span class="s8">.</span><span class="s1">id </span><span class="s8">!==</span><span class="s1"> id</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>renderCart</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>updateCartBadge</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> updateQty</span><span class="s8">(</span><span class="s1">id</span><span class="s8">,</span><span class="s1"> delta</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> item </span><span class="s8">=</span><span class="s1"> cart</span><span class="s8">.</span><span class="s1">find</span><span class="s8">(</span><span class="s1">i </span><span class="s8">=&gt;</span><span class="s1"> i</span><span class="s8">.</span><span class="s1">id </span><span class="s8">===</span><span class="s1"> id</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">item</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>item</span><span class="s8">.</span><span class="s1">qty </span><span class="s8">+=</span><span class="s1"> delta</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">item</span><span class="s8">.</span><span class="s1">qty </span><span class="s8">&lt;=</span><span class="s1"> </span><span class="s13">0</span><span class="s8">)</span><span class="s1"> cart </span><span class="s8">=</span><span class="s1"> cart</span><span class="s8">.</span><span class="s1">filter</span><span class="s8">(</span><span class="s1">i </span><span class="s8">=&gt;</span><span class="s1"> i</span><span class="s8">.</span><span class="s1">id </span><span class="s8">!==</span><span class="s1"> id</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>renderCart</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>updateCartBadge</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> renderCart</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> container </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'cart-items'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">cart</span><span class="s8">.</span><span class="s1">length </span><span class="s8">===</span><span class="s1"> </span><span class="s13">0</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p7"><span class="s5"><span class="Apple-converted-space">                </span>container</span><span class="s8">.</span><span class="s5">innerHTML </span><span class="s8">=</span><span class="s5"> </span><span class="s1">'&lt;div class="text-center py-10 text-gray-300"&gt;明細為空&lt;/div&gt;'</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'total-amount'</span><span class="s8">).</span><span class="s1">innerText </span><span class="s8">=</span><span class="s1"> </span><span class="s10">'$ 0'</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">return</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">let</span><span class="s1"> total </span><span class="s8">=</span><span class="s1"> </span><span class="s13">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>container</span><span class="s8">.</span><span class="s1">innerHTML </span><span class="s8">=</span><span class="s1"> cart</span><span class="s8">.</span><span class="s1">map</span><span class="s8">(</span><span class="s1">item </span><span class="s8">=&gt;</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">const</span><span class="s1"> sub </span><span class="s8">=</span><span class="s1"> item</span><span class="s8">.</span><span class="s1">price </span><span class="s8">*</span><span class="s1"> item</span><span class="s8">.</span><span class="s1">qty</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>total </span><span class="s8">+=</span><span class="s1"> sub</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">return</span><span class="s1"> </span><span class="s10">`</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-center gap-3 bg-gray-50 p-3 rounded-2xl border border-gray-100"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex-1 min-w-0"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="font-bold text-sm truncate"&gt;</span><span class="s8">${</span><span class="s5">item</span><span class="s8">.</span><span class="s5">name</span><span class="s8">}</span><span class="s1">&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="text-[10px] text-gray-400"&gt;</span><span class="s14">$</span><span class="s8">${</span><span class="s5">item</span><span class="s8">.</span><span class="s5">price</span><span class="s8">}</span><span class="s1">&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center bg-white rounded-lg border border-gray-200"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="updateQty(</span><span class="s8">${</span><span class="s5">item</span><span class="s8">.</span><span class="s5">id</span><span class="s8">}</span><span class="s1">, -1)" class="w-8 h-8 font-bold"&gt;-&lt;/button&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="w-6 text-center font-mono text-xs"&gt;</span><span class="s8">${</span><span class="s5">item</span><span class="s8">.</span><span class="s5">qty</span><span class="s8">}</span><span class="s1">&lt;/span&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="updateQty(</span><span class="s8">${</span><span class="s5">item</span><span class="s8">.</span><span class="s5">id</span><span class="s8">}</span><span class="s1">, 1)" class="w-8 h-8 font-bold"&gt;+&lt;/button&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="w-12 text-right font-bold text-gray-700 font-mono text-xs"&gt;</span><span class="s14">$</span><span class="s8">${</span><span class="s5">sub</span><span class="s8">}</span><span class="s1">&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;button onclick="removeFromCart(</span><span class="s8">${</span><span class="s5">item</span><span class="s8">.</span><span class="s5">id</span><span class="s8">}</span><span class="s1">)" class="text-red-300 p-1 hover:text-red-500"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;i data-lucide="trash-2" class="w-4 h-4"&gt;&lt;/i&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                </span>`</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}).</span><span class="s1">join</span><span class="s8">(</span><span class="s10">''</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'total-amount'</span><span class="s8">).</span><span class="s1">innerText </span><span class="s8">=</span><span class="s1"> </span><span class="s10">`</span><span class="s14">$</span><span class="s10"> </span><span class="s8">${</span><span class="s1">total</span><span class="s8">}</span><span class="s10">`</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>calculateChange</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>lucide</span><span class="s8">.</span><span class="s1">createIcons</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> calculateChange</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> total </span><span class="s8">=</span><span class="s1"> parseInt</span><span class="s8">(</span><span class="s1">document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'total-amount'</span><span class="s8">).</span><span class="s1">innerText</span><span class="s8">.</span><span class="s1">replace</span><span class="s8">(</span><span class="s10">'$ '</span><span class="s8">,</span><span class="s1"> </span><span class="s10">''</span><span class="s8">))</span><span class="s1"> </span><span class="s8">||</span><span class="s1"> </span><span class="s13">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> received </span><span class="s8">=</span><span class="s1"> parseInt</span><span class="s8">(</span><span class="s1">document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'cash-received'</span><span class="s8">).</span><span class="s1">value</span><span class="s8">)</span><span class="s1"> </span><span class="s8">||</span><span class="s1"> </span><span class="s13">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> changeBox </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'change-amount'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">received </span><span class="s8">&gt;=</span><span class="s1"> total </span><span class="s8">&amp;&amp;</span><span class="s1"> total </span><span class="s8">&gt;</span><span class="s1"> </span><span class="s13">0</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>changeBox</span><span class="s8">.</span><span class="s1">innerText </span><span class="s8">=</span><span class="s1"> </span><span class="s10">`</span><span class="s14">$</span><span class="s10"> </span><span class="s8">${</span><span class="s1">received </span><span class="s8">-</span><span class="s1"> total</span><span class="s8">}</span><span class="s10">`</span><span class="s8">;</span></p>
-<p class="p7"><span class="s5"><span class="Apple-converted-space">                </span>changeBox</span><span class="s8">.</span><span class="s5">className </span><span class="s8">=</span><span class="s5"> </span><span class="s1">"text-lg font-mono text-green-600 font-bold"</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}</span><span class="s1"> </span><span class="s7">else</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>changeBox</span><span class="s8">.</span><span class="s1">innerText </span><span class="s8">=</span><span class="s1"> </span><span class="s10">`</span><span class="s14">$</span><span class="s10"> 0`</span><span class="s8">;</span></p>
-<p class="p7"><span class="s5"><span class="Apple-converted-space">                </span>changeBox</span><span class="s8">.</span><span class="s5">className </span><span class="s8">=</span><span class="s5"> </span><span class="s1">"text-lg font-mono text-red-500 font-bold"</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> checkout</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> total </span><span class="s8">=</span><span class="s1"> parseInt</span><span class="s8">(</span><span class="s1">document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'total-amount'</span><span class="s8">).</span><span class="s1">innerText</span><span class="s8">.</span><span class="s1">replace</span><span class="s8">(</span><span class="s10">'$ '</span><span class="s8">,</span><span class="s1"> </span><span class="s10">''</span><span class="s8">))</span><span class="s1"> </span><span class="s8">||</span><span class="s1"> </span><span class="s13">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">total </span><span class="s8">===</span><span class="s1"> </span><span class="s13">0</span><span class="s8">)</span><span class="s1"> </span><span class="s7">return</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> received </span><span class="s8">=</span><span class="s1"> parseInt</span><span class="s8">(</span><span class="s1">document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'cash-received'</span><span class="s8">).</span><span class="s1">value</span><span class="s8">)</span><span class="s1"> </span><span class="s8">||</span><span class="s1"> </span><span class="s13">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">received </span><span class="s8">&lt;</span><span class="s1"> total</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> alert</span><span class="s8">(</span><span class="s10">'實收金額不足'</span><span class="s8">);</span><span class="s1"> </span><span class="s7">return</span><span class="s8">;</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> record </span><span class="s8">=</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>id</span><span class="s8">:</span><span class="s1"> </span><span class="s12">Date</span><span class="s8">.</span><span class="s1">now</span><span class="s8">(),</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>time</span><span class="s8">:</span><span class="s1"> </span><span class="s7">new</span><span class="s1"> </span><span class="s12">Date</span><span class="s8">().</span><span class="s1">toLocaleTimeString</span><span class="s8">(</span><span class="s10">'zh-TW'</span><span class="s8">,</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> hour12</span><span class="s8">:</span><span class="s1"> </span><span class="s7">false</span><span class="s8">,</span><span class="s1"> hour</span><span class="s8">:</span><span class="s1"> </span><span class="s10">'2-digit'</span><span class="s8">,</span><span class="s1"> minute</span><span class="s8">:</span><span class="s1"> </span><span class="s10">'2-digit'</span><span class="s1"> </span><span class="s8">}),</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>items</span><span class="s8">:</span><span class="s1"> cart</span><span class="s8">.</span><span class="s1">map</span><span class="s8">(</span><span class="s1">i </span><span class="s8">=&gt;</span><span class="s1"> </span><span class="s10">`</span><span class="s8">${</span><span class="s1">i</span><span class="s8">.</span><span class="s1">name</span><span class="s8">}</span><span class="s10">x</span><span class="s8">${</span><span class="s1">i</span><span class="s8">.</span><span class="s1">qty</span><span class="s8">}</span><span class="s10">`</span><span class="s8">).</span><span class="s1">join</span><span class="s8">(</span><span class="s10">', '</span><span class="s8">),</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>total</span><span class="s8">:</span><span class="s1"> total</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">};</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>salesHistory</span><span class="s8">.</span><span class="s1">unshift</span><span class="s8">(</span><span class="s1">record</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>localStorage</span><span class="s8">.</span><span class="s1">setItem</span><span class="s8">(</span><span class="s10">'pos_history'</span><span class="s8">,</span><span class="s1"> </span><span class="s12">JSON</span><span class="s8">.</span><span class="s1">stringify</span><span class="s8">(</span><span class="s1">salesHistory</span><span class="s8">));</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'modal-summary'</span><span class="s8">).</span><span class="s1">innerText </span><span class="s8">=</span><span class="s1"> </span><span class="s10">`收 </span><span class="s14">$</span><span class="s8">${</span><span class="s1">received</span><span class="s8">}</span><span class="s10">，找 </span><span class="s14">$</span><span class="s8">${</span><span class="s1">received </span><span class="s8">-</span><span class="s1"> total</span><span class="s8">}</span><span class="s10">`</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'success-modal'</span><span class="s8">).</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">remove</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> renderHistory</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> list </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'history-list'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">let</span><span class="s1"> totalRev </span><span class="s8">=</span><span class="s1"> </span><span class="s13">0</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>list</span><span class="s8">.</span><span class="s1">innerHTML </span><span class="s8">=</span><span class="s1"> salesHistory</span><span class="s8">.</span><span class="s1">map</span><span class="s8">(</span><span class="s1">h </span><span class="s8">=&gt;</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>totalRev </span><span class="s8">+=</span><span class="s1"> h</span><span class="s8">.</span><span class="s1">total</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">return</span><span class="s1"> </span><span class="s10">`</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="min-w-0 flex-1"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="text-xs text-gray-400"&gt;</span><span class="s8">${</span><span class="s5">h</span><span class="s8">.</span><span class="s5">time</span><span class="s8">}</span><span class="s1">&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="text-sm font-bold truncate"&gt;</span><span class="s8">${</span><span class="s5">h</span><span class="s8">.</span><span class="s5">items</span><span class="s8">}</span><span class="s1">&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="font-mono font-black text-indigo-600 ml-4"&gt;</span><span class="s14">$</span><span class="s8">${</span><span class="s5">h</span><span class="s8">.</span><span class="s5">total</span><span class="s8">}</span><span class="s1">&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                </span>`</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}).</span><span class="s1">join</span><span class="s8">(</span><span class="s10">''</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'history-total-revenue'</span><span class="s8">).</span><span class="s1">innerText </span><span class="s8">=</span><span class="s1"> </span><span class="s10">`</span><span class="s14">$</span><span class="s10"> </span><span class="s8">${</span><span class="s1">totalRev</span><span class="s8">}</span><span class="s10">`</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'history-count'</span><span class="s8">).</span><span class="s1">innerText </span><span class="s8">=</span><span class="s1"> </span><span class="s10">`今日交易筆數: </span><span class="s8">${</span><span class="s1">salesHistory</span><span class="s8">.</span><span class="s1">length</span><span class="s8">}</span><span class="s10">`</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> clearHistory</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> </span><span class="s7">if</span><span class="s8">(</span><span class="s1">confirm</span><span class="s8">(</span><span class="s10">'清除今日所有紀錄？'</span><span class="s8">))</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> salesHistory</span><span class="s8">=[];</span><span class="s1"> localStorage</span><span class="s8">.</span><span class="s1">setItem</span><span class="s8">(</span><span class="s10">'pos_history'</span><span class="s8">,</span><span class="s1"> </span><span class="s12">JSON</span><span class="s8">.</span><span class="s1">stringify</span><span class="s8">([]));</span><span class="s1"> renderHistory</span><span class="s8">();</span><span class="s1"> </span><span class="s8">}</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> updateCartBadge</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'cart-count-badge'</span><span class="s8">).</span><span class="s1">innerText </span><span class="s8">=</span><span class="s1"> cart</span><span class="s8">.</span><span class="s1">reduce</span><span class="s8">((</span><span class="s1">s</span><span class="s8">,</span><span class="s1"> i</span><span class="s8">)</span><span class="s1"> </span><span class="s8">=&gt;</span><span class="s1"> s </span><span class="s8">+</span><span class="s1"> i</span><span class="s8">.</span><span class="s1">qty</span><span class="s8">,</span><span class="s1"> </span><span class="s13">0</span><span class="s8">);</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> clearCart</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> cart </span><span class="s8">=</span><span class="s1"> </span><span class="s8">[];</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'cash-received'</span><span class="s8">).</span><span class="s1">value </span><span class="s8">=</span><span class="s1"> </span><span class="s10">''</span><span class="s8">;</span><span class="s1"> renderCart</span><span class="s8">();</span><span class="s1"> updateCartBadge</span><span class="s8">();</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> closeModal</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'success-modal'</span><span class="s8">).</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">add</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">);</span><span class="s1"> clearCart</span><span class="s8">();</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> renderSettings</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> list </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'settings-list'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>list</span><span class="s8">.</span><span class="s1">innerHTML </span><span class="s8">=</span><span class="s1"> products</span><span class="s8">.</span><span class="s1">map</span><span class="s8">(</span><span class="s1">p </span><span class="s8">=&gt;</span><span class="s1"> </span><span class="s10">`</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center justify-between p-4"&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="font-bold"&gt;</span><span class="s8">${</span><span class="s5">p</span><span class="s8">.</span><span class="s5">name</span><span class="s8">}</span><span class="s1">&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="text-xs text-gray-400"&gt;</span><span class="s8">${</span><span class="s5">p</span><span class="s8">.</span><span class="s5">category</span><span class="s8">}</span><span class="s1"> • </span><span class="s14">$</span><span class="s8">${</span><span class="s5">p</span><span class="s8">.</span><span class="s5">price</span><span class="s8">}</span><span class="s1">&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;button onclick="deleteProduct(</span><span class="s8">${</span><span class="s5">p</span><span class="s8">.</span><span class="s5">id</span><span class="s8">}</span><span class="s1">)" class="text-red-400 p-2"&gt;&lt;i data-lucide="trash-2" size="18"&gt;&lt;/i&gt;&lt;/button&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p7"><span class="s1"><span class="Apple-converted-space">            </span>`</span><span class="s8">).</span><span class="s5">join</span><span class="s8">(</span><span class="s1">''</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>localStorage</span><span class="s8">.</span><span class="s1">setItem</span><span class="s8">(</span><span class="s10">'pos_products'</span><span class="s8">,</span><span class="s1"> </span><span class="s12">JSON</span><span class="s8">.</span><span class="s1">stringify</span><span class="s8">(</span><span class="s1">products</span><span class="s8">));</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>lucide</span><span class="s8">.</span><span class="s1">createIcons</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p5"><span class="s9"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> addProduct</span><span class="s8">()</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">const</span><span class="s1"> n </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'new-p-name'</span><span class="s8">),</span><span class="s1"> p </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'new-p-price'</span><span class="s8">),</span><span class="s1"> c </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'new-p-category'</span><span class="s8">),</span><span class="s1"> cc </span><span class="s8">=</span><span class="s1"> document</span><span class="s8">.</span><span class="s1">getElementById</span><span class="s8">(</span><span class="s10">'custom-category'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">let</span><span class="s1"> cat </span><span class="s8">=</span><span class="s1"> </span><span class="s8">(</span><span class="s1">c</span><span class="s8">.</span><span class="s1">value </span><span class="s8">===</span><span class="s1"> </span><span class="s10">'custom'</span><span class="s8">)</span><span class="s1"> </span><span class="s8">?</span><span class="s1"> cc</span><span class="s8">.</span><span class="s1">value </span><span class="s8">:</span><span class="s1"> c</span><span class="s8">.</span><span class="s1">value</span><span class="s8">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">if</span><span class="s1"> </span><span class="s8">(</span><span class="s1">n</span><span class="s8">.</span><span class="s1">value </span><span class="s8">&amp;&amp;</span><span class="s1"> p</span><span class="s8">.</span><span class="s1">value </span><span class="s8">&gt;=</span><span class="s1"> </span><span class="s13">0</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>products</span><span class="s8">.</span><span class="s1">push</span><span class="s8">({</span><span class="s1"> id</span><span class="s8">:</span><span class="s1"> </span><span class="s12">Date</span><span class="s8">.</span><span class="s1">now</span><span class="s8">(),</span><span class="s1"> name</span><span class="s8">:</span><span class="s1"> n</span><span class="s8">.</span><span class="s1">value</span><span class="s8">,</span><span class="s1"> price</span><span class="s8">:</span><span class="s1"> parseInt</span><span class="s8">(</span><span class="s1">p</span><span class="s8">.</span><span class="s1">value</span><span class="s8">),</span><span class="s1"> category</span><span class="s8">:</span><span class="s1"> cat </span><span class="s8">||</span><span class="s1"> </span><span class="s10">'未分類'</span><span class="s1"> </span><span class="s8">});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>n</span><span class="s8">.</span><span class="s1">value </span><span class="s8">=</span><span class="s1"> </span><span class="s10">''</span><span class="s8">;</span><span class="s1"> p</span><span class="s8">.</span><span class="s1">value </span><span class="s8">=</span><span class="s1"> </span><span class="s10">''</span><span class="s8">;</span><span class="s1"> cc</span><span class="s8">.</span><span class="s1">value </span><span class="s8">=</span><span class="s1"> </span><span class="s10">''</span><span class="s8">;</span><span class="s1"> cc</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">add</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">);</span><span class="s1"> c</span><span class="s8">.</span><span class="s1">classList</span><span class="s8">.</span><span class="s1">remove</span><span class="s8">(</span><span class="s10">'hidden'</span><span class="s8">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>renderProducts</span><span class="s8">();</span><span class="s1"> renderSettings</span><span class="s8">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s8">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">function</span><span class="s1"> deleteProduct</span><span class="s8">(</span><span class="s1">id</span><span class="s8">)</span><span class="s1"> </span><span class="s8">{</span><span class="s1"> products </span><span class="s8">=</span><span class="s1"> products</span><span class="s8">.</span><span class="s1">filter</span><span class="s8">(</span><span class="s1">p </span><span class="s8">=&gt;</span><span class="s1"> p</span><span class="s8">.</span><span class="s1">id </span><span class="s8">!==</span><span class="s1"> id</span><span class="s8">);</span><span class="s1"> renderProducts</span><span class="s8">();</span><span class="s1"> renderSettings</span><span class="s8">();</span><span class="s1"> </span><span class="s8">}</span></p>
-<p class="p1"><span class="s5"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">body</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">html</span><span class="s3">&gt;</span></p>
-<p class="p8"><span class="s9"></span><br></p>
+<body class="h-screen flex flex-col overflow-hidden text-gray-800">
+
+    <header class="bg-indigo-700 text-white p-4 shadow-lg flex justify-between items-center shrink-0 z-20 pt-[calc(1rem+env(safe-area-inset-top))]">
+        <h1 class="text-lg font-bold flex items-center gap-2">
+            <i data-lucide="store" class="w-5 h-5"></i> 
+            <span>市集 POS</span>
+        </h1>
+        <nav class="flex bg-indigo-800 rounded-lg p-1">
+            <button onclick="switchTab('pos')" id="tab-pos" class="px-3 py-1.5 rounded-md text-sm font-medium transition bg-indigo-600 shadow">
+                點餐
+            </button>
+            <button onclick="switchTab('history')" id="tab-history" class="px-3 py-1.5 rounded-md text-sm font-medium transition">
+                營收
+            </button>
+            <button onclick="switchTab('settings')" id="tab-settings" class="px-3 py-1.5 rounded-md text-sm font-medium transition">
+                管理
+            </button>
+        </nav>
+    </header>
+
+    <main class="flex-1 relative overflow-hidden bg-gray-100 flex flex-col md:flex-row">
+        <div class="flex-1 relative flex flex-col overflow-hidden">
+            <section id="view-pos" class="view-section flex-1 p-3 overflow-y-auto no-scrollbar space-y-6">
+                <div id="product-list-container"></div>
+                <div class="h-32 md:hidden"></div>
+            </section>
+
+            <section id="view-history" class="view-section hidden flex-1 p-4 overflow-y-auto no-scrollbar">
+                <div class="max-w-2xl mx-auto space-y-4">
+                    <div class="flex justify-between items-end">
+                        <h2 class="text-xl font-bold">銷售紀錄</h2>
+                        <button onclick="clearHistory()" class="text-xs text-red-400">清除紀錄</button>
+                    </div>
+                    <div class="bg-indigo-700 text-white p-6 rounded-3xl shadow-lg">
+                        <div class="text-indigo-200 text-sm">今日累計營收</div>
+                        <div class="text-4xl font-black font-mono mt-1" id="history-total-revenue">$ 0</div>
+                        <div class="text-xs mt-2 opacity-70" id="history-count">共 0 筆交易</div>
+                    </div>
+                    <div id="history-list" class="space-y-3"></div>
+                </div>
+            </section>
+
+            <section id="view-settings" class="view-section hidden flex-1 p-4 overflow-y-auto no-scrollbar">
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+                        <h3 class="font-bold mb-4 flex items-center gap-2"><i data-lucide="plus-circle" class="w-5 h-5 text-green-500"></i> 新增商品</h3>
+                        <div class="space-y-3">
+                            <div class="flex gap-2">
+                                <input type="text" id="new-p-name" placeholder="名稱" class="flex-1 border-2 border-gray-100 p-3 rounded-xl outline-none focus:border-green-500">
+                                <input type="number" id="new-p-price" placeholder="價格" class="w-24 border-2 border-gray-100 p-3 rounded-xl outline-none focus:border-green-500" inputmode="numeric">
+                            </div>
+                            <div class="flex gap-2">
+                                <select id="new-p-category" class="flex-1 border-2 border-gray-100 p-3 rounded-xl bg-white">
+                                    <option value="預設群組">預設群組</option>
+                                    <option value="飲品">飲品</option>
+                                    <option value="甜點">甜點</option>
+                                    <option value="custom">+ 自定義群組</option>
+                                </select>
+                                <input type="text" id="custom-category" placeholder="新群組名稱" class="hidden flex-1 border-2 border-gray-100 p-3 rounded-xl outline-none focus:border-green-500">
+                                <button onclick="addProduct()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-bold shrink-0">新增</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-4 bg-gray-50 border-b font-bold">商品管理</div>
+                        <div id="settings-list" class="divide-y divide-gray-100"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <aside id="view-cart" class="flex w-full md:w-96 bg-white border-l border-gray-200 flex-col shadow-[0_-10px_30px_-15px_rgba(0,0,0,0.3)] md:shadow-xl">
+            <div onclick="toggleCart()" class="drawer-handle w-full py-2 bg-white flex flex-col items-center cursor-pointer border-b">
+                <div class="w-12 h-1.5 bg-gray-200 rounded-full mb-2"></div>
+                <div class="flex items-center gap-2 text-indigo-700 font-bold">
+                    <i data-lucide="receipt-text" class="w-4 h-4"></i>
+                    <span>結帳明細</span>
+                    <span id="cart-count-badge" class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full">0</span>
+                </div>
+            </div>
+
+            <div class="hidden md:flex p-4 border-b justify-between items-center bg-white">
+                <h2 class="font-bold text-lg text-indigo-700">明細清單</h2>
+                <button onclick="clearCart()" class="text-gray-400 text-sm">清空</button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar" id="cart-items"></div>
+
+            <div class="p-4 bg-gray-50 border-t space-y-4 pb-safe">
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500">總計金額</span>
+                        <span id="total-amount" class="text-2xl font-bold text-indigo-600">$ 0</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="relative">
+                            <span class="absolute left-3 top-1 text-[10px] text-gray-400">實收</span>
+                            <input type="number" id="cash-received" oninput="calculateChange()" class="w-full bg-white border-2 border-gray-200 pt-5 pb-2 px-3 rounded-xl text-lg font-mono outline-none" inputmode="numeric" placeholder="0">
+                        </div>
+                        <div class="relative bg-gray-100 rounded-xl px-3 pt-5 pb-2">
+                            <span class="absolute left-3 top-1 text-[10px] text-gray-400">找零</span>
+                            <div id="change-amount" class="text-lg font-mono text-red-500 font-bold">$ 0</div>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="checkout()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl text-xl font-bold shadow-lg active:scale-95 transition-all">
+                    結帳完成
+                </button>
+            </div>
+        </aside>
+    </main>
+
+    <div id="success-modal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center p-6 z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-3xl max-w-sm w-full text-center space-y-6">
+            <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto">
+                <i data-lucide="check" size="40"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800">結帳完成</h3>
+            <p class="text-gray-500" id="modal-summary"></p>
+            <button onclick="closeModal()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold">接待下位客戶</button>
+        </div>
+    </div>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('pos_products')) || [
+            { id: 1, name: '招牌咖啡', price: 120, category: '飲品' },
+            { id: 2, name: '精品手沖', price: 150, category: '飲品' },
+            { id: 3, name: '巧克力蛋糕', price: 80, category: '甜點' }
+        ];
+        let salesHistory = JSON.parse(localStorage.getItem('pos_history')) || [];
+        let cart = [];
+
+        window.onload = () => {
+            renderProducts();
+            renderSettings();
+            renderHistory();
+            updateCartBadge();
+            
+            document.getElementById('new-p-category').addEventListener('change', (e) => {
+                const customInput = document.getElementById('custom-category');
+                if (e.target.value === 'custom') {
+                    customInput.classList.remove('hidden');
+                    e.target.classList.add('hidden');
+                    customInput.focus();
+                }
+            });
+            lucide.createIcons();
+        };
+
+        function switchTab(tab) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('bg-indigo-600', 'shadow'));
+            document.getElementById(`tab-${tab}`).classList.add('bg-indigo-600', 'shadow');
+
+            const cartEl = document.getElementById('view-cart');
+            (tab === 'pos') ? cartEl.classList.add('flex') : cartEl.classList.remove('flex', 'hidden');
+            if (tab !== 'pos') cartEl.classList.add('hidden');
+
+            if(tab === 'history') renderHistory();
+            lucide.createIcons();
+        }
+
+        function toggleCart() {
+            document.getElementById('view-cart').classList.toggle('expanded');
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('product-list-container');
+            container.innerHTML = '';
+            const groups = products.reduce((acc, p) => {
+                const cat = p.category || '預設';
+                if (!acc[cat]) acc[cat] = [];
+                acc[cat].push(p);
+                return acc;
+            }, {});
+
+            Object.keys(groups).sort().forEach(group => {
+                const section = document.createElement('div');
+                section.className = 'mb-6';
+                section.innerHTML = `
+                    <h3 class="text-xs font-bold text-gray-400 mb-2 px-1 uppercase tracking-wider">${group}</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        ${groups[group].map(p => `
+                            <button onclick="addToCart(${p.id})" class="product-card bg-white p-4 h-24 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center justify-center transition-all">
+                                <span class="text-sm font-bold text-gray-700">${p.name}</span>
+                                <span class="text-indigo-600 font-mono font-bold">$${p.price}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+            lucide.createIcons();
+        }
+
+        function addToCart(pid) {
+            const prod = products.find(p => p.id === pid);
+            const item = cart.find(i => i.id === pid);
+            if (item) item.qty++;
+            else cart.push({ ...prod, qty: 1 });
+            if (navigator.vibrate) navigator.vibrate(10);
+            renderCart();
+            updateCartBadge();
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            renderCart();
+            updateCartBadge();
+        }
+
+        function updateQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            }
+            renderCart();
+            updateCartBadge();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-300">明細為空</div>';
+                document.getElementById('total-amount').innerText = '$ 0';
+                return;
+            }
+            let total = 0;
+            container.innerHTML = cart.map(item => {
+                const sub = item.price * item.qty;
+                total += sub;
+                return `
+                    <div class="flex items-center gap-3 bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-sm truncate">${item.name}</div>
+                            <div class="text-[10px] text-gray-400">$${item.price}</div>
+                        </div>
+                        <div class="flex items-center bg-white rounded-lg border border-gray-200">
+                            <button onclick="updateQty(${item.id}, -1)" class="w-8 h-8 font-bold">-</button>
+                            <span class="w-6 text-center font-mono text-xs">${item.qty}</span>
+                            <button onclick="updateQty(${item.id}, 1)" class="w-8 h-8 font-bold">+</button>
+                        </div>
+                        <div class="w-12 text-right font-bold text-gray-700 font-mono text-xs">$${sub}</div>
+                        <button onclick="removeFromCart(${item.id})" class="text-red-300 p-1 hover:text-red-500">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('total-amount').innerText = `$ ${total}`;
+            calculateChange();
+            lucide.createIcons();
+        }
+
+        function calculateChange() {
+            const total = parseInt(document.getElementById('total-amount').innerText.replace('$ ', '')) || 0;
+            const received = parseInt(document.getElementById('cash-received').value) || 0;
+            const changeBox = document.getElementById('change-amount');
+            if (received >= total && total > 0) {
+                changeBox.innerText = `$ ${received - total}`;
+                changeBox.className = "text-lg font-mono text-green-600 font-bold";
+            } else {
+                changeBox.innerText = `$ 0`;
+                changeBox.className = "text-lg font-mono text-red-500 font-bold";
+            }
+        }
+
+        function checkout() {
+            const total = parseInt(document.getElementById('total-amount').innerText.replace('$ ', '')) || 0;
+            if (total === 0) return;
+            const received = parseInt(document.getElementById('cash-received').value) || 0;
+            if (received < total) { alert('實收金額不足'); return; }
+
+            const record = {
+                id: Date.now(),
+                time: new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' }),
+                items: cart.map(i => `${i.name}x${i.qty}`).join(', '),
+                total: total
+            };
+            salesHistory.unshift(record);
+            localStorage.setItem('pos_history', JSON.stringify(salesHistory));
+
+            document.getElementById('modal-summary').innerText = `收 $${received}，找 $${received - total}`;
+            document.getElementById('success-modal').classList.remove('hidden');
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            let totalRev = 0;
+            list.innerHTML = salesHistory.map(h => {
+                totalRev += h.total;
+                return `
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+                        <div class="min-w-0 flex-1">
+                            <div class="text-xs text-gray-400">${h.time}</div>
+                            <div class="text-sm font-bold truncate">${h.items}</div>
+                        </div>
+                        <div class="font-mono font-black text-indigo-600 ml-4">$${h.total}</div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('history-total-revenue').innerText = `$ ${totalRev}`;
+            document.getElementById('history-count').innerText = `今日交易筆數: ${salesHistory.length}`;
+        }
+
+        function clearHistory() { if(confirm('清除今日所有紀錄？')) { salesHistory=[]; localStorage.setItem('pos_history', JSON.stringify([])); renderHistory(); } }
+        function updateCartBadge() { document.getElementById('cart-count-badge').innerText = cart.reduce((s, i) => s + i.qty, 0); }
+        function clearCart() { cart = []; document.getElementById('cash-received').value = ''; renderCart(); updateCartBadge(); }
+        function closeModal() { document.getElementById('success-modal').classList.add('hidden'); clearCart(); }
+
+        function renderSettings() {
+            const list = document.getElementById('settings-list');
+            list.innerHTML = products.map(p => `
+                <div class="flex items-center justify-between p-4">
+                    <div>
+                        <div class="font-bold">${p.name}</div>
+                        <div class="text-xs text-gray-400">${p.category} • $${p.price}</div>
+                    </div>
+                    <button onclick="deleteProduct(${p.id})" class="text-red-400 p-2"><i data-lucide="trash-2" size="18"></i></button>
+                </div>
+            `).join('');
+            localStorage.setItem('pos_products', JSON.stringify(products));
+            lucide.createIcons();
+        }
+
+        function addProduct() {
+            const n = document.getElementById('new-p-name'), p = document.getElementById('new-p-price'), c = document.getElementById('new-p-category'), cc = document.getElementById('custom-category');
+            let cat = (c.value === 'custom') ? cc.value : c.value;
+            if (n.value && p.value >= 0) {
+                products.push({ id: Date.now(), name: n.value, price: parseInt(p.value), category: cat || '未分類' });
+                n.value = ''; p.value = ''; cc.value = ''; cc.classList.add('hidden'); c.classList.remove('hidden');
+                renderProducts(); renderSettings();
+            }
+        }
+        function deleteProduct(id) { products = products.filter(p => p.id !== id); renderProducts(); renderSettings(); }
+    </script>
 </body>
 </html>
