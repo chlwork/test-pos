@@ -1,629 +1,613 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    body {background-color: #eef2f7}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>市集行動 POS 系統</title>
+    
+    <!-- 行動裝置 Web App 設置 (PWA 基礎) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="市集POS">
+    <link rel="apple-touch-icon" href="https://placehold.jp/192x192.png?text=POS">
+    <meta name="theme-color" content="#4338ca">
+    
+    <!-- 外部資源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        
+        :root {
+            --safe-area-inset-bottom: env(safe-area-inset-bottom);
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+            overscroll-behavior-y: contain; /* 防止手機瀏覽器下拉重新整理 */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* 滾動條隱藏 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* 卡片點擊回饋 */
+        .active-scale:active { transform: scale(0.96); transition: transform 0.1s; }
+
+        /* 購物車抽屜 (手機版) */
+        @media (max-width: 767px) {
+            #view-cart {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 40;
+                height: 80vh;
+                transform: translateY(calc(80vh - 64px));
+                transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.1);
+                border-radius: 24px 24px 0 0;
+                box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.1);
+            }
+            #view-cart.expanded { transform: translateY(0); }
+            .drawer-handle { display: block; }
+        }
+        
+        @media (min-width: 768px) {
+            #view-cart { height: auto; transform: none !important; border-radius: 0; }
+            .drawer-handle { display: none; }
+        }
+
+        .pb-safe { padding-bottom: calc(1rem + var(--safe-area-inset-bottom)); }
+    </style>
 </head>
-<body>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1">&lt;!DOCTYPE html&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1">&lt;html lang="zh-TW"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1">&lt;head&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;市集行動 POS 系統&lt;/title&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">    </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 行動裝置 Web App 設置 (PWA 基礎) --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-capable" content="yes"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="apple-mobile-web-app-title" content="市集POS"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;link rel="apple-touch-icon" href="https://placehold.jp/192x192.png?text=POS"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="theme-color" content="#4338ca"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">    </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 外部資源 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://unpkg.com/lucide@latest"&gt;&lt;/script&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">    </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;display=swap');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">        </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>:root {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>--safe-area-inset-bottom: env(safe-area-inset-bottom);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>body {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>font-family: 'Noto Sans TC', sans-serif;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>background-color: #f8fafc;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>overscroll-behavior-y: contain; /* 防止手機瀏覽器下拉重新整理 */</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>-webkit-tap-highlight-color: transparent;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>/* 滾動條隱藏 */</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>.no-scrollbar::-webkit-scrollbar { display: none; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>/* 卡片點擊回饋 */</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>.active-scale:active { transform: scale(0.96); transition: transform 0.1s; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>/* 購物車抽屜 (手機版) */</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>@media (max-width: 767px) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>#view-cart {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>position: fixed;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>bottom: 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>left: 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>right: 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>z-index: 40;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>height: 80vh;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>transform: translateY(calc(80vh - 64px));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.1);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>border-radius: 24px 24px 0 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.1);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>#view-cart.expanded { transform: translateY(0); }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>.drawer-handle { display: block; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">        </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>@media (min-width: 768px) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>#view-cart { height: auto; transform: none !important; border-radius: 0; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>.drawer-handle { display: none; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>.pb-safe { padding-bottom: calc(1rem + var(--safe-area-inset-bottom)); }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1">&lt;/head&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1">&lt;body class="h-screen flex flex-col overflow-hidden text-slate-800"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 頂部導覽列 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;header class="bg-indigo-700 text-white p-4 shadow-md flex justify-between items-center shrink-0 z-50 pt-[calc(1rem+env(safe-area-inset-top))]"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;h1 class="text-lg font-bold flex items-center gap-2"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;i data-lucide="store" class="w-5 h-5"&gt;&lt;/i&gt;<span class="Apple-converted-space"> </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;span&gt;市集 POS&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/h1&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;nav class="flex bg-indigo-800/50 rounded-xl p-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="switchTab('pos')" id="tab-pos" class="px-4 py-1.5 rounded-lg text-sm font-bold transition bg-indigo-600 shadow"&gt;結帳&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="switchTab('history')" id="tab-history" class="px-4 py-1.5 rounded-lg text-sm font-bold transition"&gt;營收&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;button onclick="switchTab('settings')" id="tab-settings" class="px-4 py-1.5 rounded-lg text-sm font-bold transition"&gt;管理&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/nav&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 主內容區 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;main class="flex-1 relative overflow-hidden flex flex-col md:flex-row"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">        </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 左側/中央 主要視窗 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="flex-1 relative flex flex-col overflow-hidden bg-slate-50"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- [結帳] 視圖 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;section id="view-pos" class="view-section flex-1 p-4 overflow-y-auto no-scrollbar"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div id="product-list-container" class="max-w-4xl mx-auto space-y-8"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;!-- 商品清單由 JS 渲染 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;!-- 手機版墊高防止被購物車遮擋 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="h-32 md:hidden"&gt;&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- [營收] 視圖 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;section id="view-history" class="view-section hidden flex-1 p-4 overflow-y-auto no-scrollbar"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="max-w-2xl mx-auto space-y-6"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div id="history-main" class="space-y-6"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex justify-between items-center"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;h2 class="text-xl font-bold"&gt;營收概況&lt;/h2&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="clearHistory()" class="text-xs text-red-500 font-medium"&gt;清除紀錄&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;!-- 營收大字報 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-gradient-to-br from-indigo-600 to-violet-700 text-white p-8 rounded-3xl shadow-lg relative overflow-hidden"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="relative z-10"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;div class="text-indigo-100 text-sm font-medium"&gt;今日總營收 (TWD)&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;div class="text-5xl font-black font-mono mt-2" id="history-total-revenue"&gt;$ 0&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;div class="text-xs mt-4 bg-white/20 inline-block px-3 py-1 rounded-full" id="history-count"&gt;共 0 筆成交&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;i data-lucide="bar-chart" class="absolute right-[-20px] bottom-[-20px] w-48 h-48 opacity-10"&gt;&lt;/i&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;!-- 最近交易 &amp; 明細按鈕 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="p-4 bg-slate-50/80 border-b flex justify-between items-center"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;span class="font-bold text-sm flex items-center gap-2"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                    </span>&lt;i data-lucide="clock" class="w-4 h-4 text-slate-400"&gt;&lt;/i&gt; 最近交易</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;button onclick="toggleHistorySubView(true)" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full active:scale-90 transition"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                    </span>查看商品銷售統計</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div id="history-list" class="divide-y divide-slate-100"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;!-- 交易紀錄由 JS 渲染 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;!-- 品項統計子頁面 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div id="history-detail" class="hidden space-y-4"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;button onclick="toggleHistorySubView(false)" class="flex items-center gap-2 text-slate-500 font-bold text-sm mb-2"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;i data-lucide="chevron-left" class="w-5 h-5"&gt;&lt;/i&gt; 返回營收概況</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="p-4 border-b font-bold text-slate-700"&gt;商品銷售排行&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div id="stats-summary" class="divide-y divide-slate-50"&gt;&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- [管理] 視圖 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;section id="view-settings" class="view-section hidden flex-1 p-4 overflow-y-auto no-scrollbar"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="max-w-2xl mx-auto space-y-6"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-center"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h2 class="text-xl font-bold"&gt;商品庫存管理&lt;/h2&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;button onclick="openProductModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md flex items-center gap-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;i data-lucide="plus" class="w-4 h-4"&gt;&lt;/i&gt; 新增品項</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">                    </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div id="settings-list" class="divide-y divide-slate-100"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;!-- 管理清單由 JS 渲染 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/section&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 購物車/結帳面板 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;aside id="view-cart" class="flex w-full md:w-96 bg-white border-l border-slate-200 flex-col shadow-2xl z-40"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- 手機版把手 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div onclick="toggleCart()" class="drawer-handle w-full py-2 bg-white flex flex-col items-center cursor-pointer border-b"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="w-12 h-1.5 bg-slate-200 rounded-full mb-1"&gt;&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="flex items-center gap-2 text-indigo-700 font-bold text-sm"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;i data-lucide="shopping-cart" class="w-4 h-4"&gt;&lt;/i&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span&gt;已選項目&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;span id="cart-count-badge" class="bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-full"&gt;0&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- 電腦版標題 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="hidden md:flex p-5 border-b justify-between items-center"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h2 class="font-bold text-slate-700 flex items-center gap-2"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;i data-lucide="receipt" class="w-5 h-5 text-indigo-500"&gt;&lt;/i&gt; 結帳清單</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/h2&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button onclick="clearCart()" class="text-slate-400 text-xs hover:text-rose-500"&gt;清空&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- 購物車品項 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar" id="cart-items"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;!-- 由 JS 渲染 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- 結帳金額區 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="p-5 bg-slate-50 border-t space-y-4 pb-safe"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="space-y-3"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex justify-between items-end"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="text-sm font-bold text-slate-500"&gt;應收總計&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span id="total-amount" class="text-3xl font-black text-indigo-600 font-mono"&gt;$ 0&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">                    </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="grid grid-cols-2 gap-3"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="relative group"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;label class="absolute left-3 top-1.5 text-[10px] font-bold text-slate-400 uppercase"&gt;實收現鈔&lt;/label&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;input type="number" id="cash-received" oninput="calculateChange()" class="w-full bg-white border-2 border-slate-200 pt-6 pb-2 px-3 rounded-2xl text-xl font-mono outline-none focus:border-indigo-500 transition-colors" inputmode="numeric" placeholder="0"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="relative bg-slate-200/50 rounded-2xl px-3 pt-6 pb-2 border-2 border-transparent"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;label class="absolute left-3 top-1.5 text-[10px] font-bold text-slate-400 uppercase"&gt;找零金額&lt;/label&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div id="change-amount" class="text-xl font-mono text-slate-400 font-black"&gt;$ 0&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;button id="btn-checkout" onclick="checkout()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl text-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale" disabled&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>完成結帳</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/aside&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- 彈窗: 商品編輯/新增 --&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="product-modal" class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center p-4 z-[100] backdrop-blur-sm"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="bg-white p-6 rounded-[32px] max-w-md w-full shadow-2xl space-y-6 relative animate-in fade-in zoom-in duration-200"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">             </span>&lt;div class="flex justify-between items-center"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;h3 id="modal-title" class="text-xl font-bold text-slate-800"&gt;編輯商品&lt;/h3&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;button onclick="closeProductModal()" class="text-slate-400 p-1 hover:bg-slate-100 rounded-full"&gt;&lt;i data-lucide="x" class="w-6 h-6"&gt;&lt;/i&gt;&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">             </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">             </span>&lt;div class="space-y-4"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;input type="hidden" id="edit-id"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;div class="space-y-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;label class="text-xs font-bold text-slate-400 ml-1"&gt;品項名稱&lt;/label&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;input type="text" id="edit-name" class="w-full border-2 border-slate-100 p-3 rounded-2xl outline-none focus:border-indigo-500 bg-slate-50 font-medium"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">                 </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;div class="grid grid-cols-2 gap-4"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;label class="text-xs font-bold text-slate-400 ml-1"&gt;定價 (TWD)&lt;/label&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;input type="number" id="edit-price" class="w-full border-2 border-slate-100 p-3 rounded-2xl outline-none focus:border-indigo-500 bg-slate-50 font-mono font-bold" inputmode="numeric"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="space-y-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;label class="text-xs font-bold text-slate-400 ml-1"&gt;初始庫存&lt;/label&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;input type="number" id="edit-stock" class="w-full border-2 border-slate-100 p-3 rounded-2xl outline-none focus:border-indigo-500 bg-slate-50 font-mono font-bold" inputmode="numeric"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;div class="space-y-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;label class="text-xs font-bold text-slate-400 ml-1"&gt;商品分類 (群組)&lt;/label&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;input type="text" id="edit-category" placeholder="例如：手沖、甜點、周邊" class="w-full border-2 border-slate-100 p-3 rounded-2xl outline-none focus:border-indigo-500 bg-slate-50 font-medium"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;div class="pt-4"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                     </span>&lt;button onclick="saveProduct()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition"&gt;儲存變更&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                 </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">             </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 核心資料狀態</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>let products = JSON.parse(localStorage.getItem('pos_products')) || [</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 1, name: '招牌拿鐵', price: 120, category: '精選飲品', stock: 99 },</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 2, name: '美式咖啡', price: 90, category: '精選飲品', stock: 99 },</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 3, name: '巧克力布朗尼', price: 85, category: '手作甜點', stock: 12 },</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 4, name: '單品手沖', price: 160, category: '精選飲品', stock: 20 }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>];</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>let salesHistory = JSON.parse(localStorage.getItem('pos_history')) || [];</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>let cart = [];</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 初始化</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>window.onload = () =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderProducts();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderSettings();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderHistory();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>updateCartBadge();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>lucide.createIcons();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>};</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 導覽切換</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function switchTab(tab) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.view-section').forEach(s =&gt; s.classList.add('hidden'));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(`view-${tab}`).classList.remove('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>document.querySelectorAll('nav button').forEach(b =&gt; b.classList.remove('bg-indigo-600', 'shadow'));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById(`tab-${tab}`).classList.add('bg-indigo-600', 'shadow');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const cartEl = document.getElementById('view-cart');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (tab === 'pos') {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>cartEl.classList.remove('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>cartEl.classList.add('flex');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>cartEl.classList.remove('flex');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>cartEl.classList.add('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if(tab === 'history') {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>toggleHistorySubView(false);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>renderHistory();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if(tab === 'settings') renderSettings();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>lucide.createIcons();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 營收統計視窗切換</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function toggleHistorySubView(showDetail) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const main = document.getElementById('history-main');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const detail = document.getElementById('history-detail');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (showDetail) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>main.classList.add('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>detail.classList.remove('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>main.classList.remove('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>detail.classList.add('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>lucide.createIcons();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 渲染結帳頁面商品</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function renderProducts() {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const container = document.getElementById('product-list-container');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>container.innerHTML = '';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const groups = products.reduce((acc, p) =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>const cat = p.category || '未分類';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>if (!acc[cat]) acc[cat] = [];</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>acc[cat].push(p);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>return acc;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}, {});</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>Object.keys(groups).sort().forEach(group =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>const section = document.createElement('div');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>section.className = 'space-y-4';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>section.innerHTML = `</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-center gap-3 px-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="h-4 w-1 bg-indigo-500 rounded-full"&gt;&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-sm font-black text-slate-400 uppercase tracking-widest"&gt;${group}&lt;/h3&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>${groups[group].map(p =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>const inCart = cart.some(item =&gt; item.id === p.id);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>const outOfStock = p.stock &lt;= 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>return `</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="${outOfStock ? '' : `toggleProductSelection(${p.id})`}"<span class="Apple-converted-space"> </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>class="active-scale text-left p-4 rounded-3xl border-2 transition-all flex flex-col justify-between h-32 relative overflow-hidden</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>${inCart ? 'bg-indigo-50 border-indigo-500 ring-2 ring-indigo-200' : 'bg-white border-slate-100 hover:border-indigo-200 shadow-sm'}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>${outOfStock ? 'opacity-40 grayscale cursor-not-allowed border-slate-200 bg-slate-100' : ''}"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">                                </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;div class="font-bold text-slate-700 leading-tight"&gt;${p.name}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">                                </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;div class="flex items-end justify-between"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                    </span>&lt;div class="font-mono font-black text-xl ${inCart ? 'text-indigo-600' : 'text-slate-800'}"&gt;$${p.price}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                    </span>&lt;div class="text-[10px] font-bold ${p.stock &lt; 10 ? 'text-rose-500' : 'text-slate-300'}"&gt;存貨 ${p.stock}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>${inCart ? '&lt;div class="absolute top-2 right-2 text-indigo-500"&gt;&lt;i data-lucide="check-circle-2" class="w-5 h-5"&gt;&lt;/i&gt;&lt;/div&gt;' : ''}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                                </span>${outOfStock ? '&lt;div class="absolute inset-0 flex items-center justify-center bg-slate-100/50 font-black text-slate-400 text-xs rotate-[-15deg] pointer-events-none"&gt;SOLD OUT&lt;/div&gt;' : ''}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/button&gt;`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>}).join('')}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>container.appendChild(section);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>});</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>lucide.createIcons();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 結帳功能: 選擇商品</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function toggleProductSelection(pid) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const prod = products.find(p =&gt; p.id === pid);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const index = cart.findIndex(i =&gt; i.id === pid);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (index &gt; -1) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>cart.splice(index, 1);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>cart.push({ ...prod, qty: 1 });</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (window.navigator.vibrate) window.navigator.vibrate(10);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderCart();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>updateCartBadge();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderProducts();<span class="Apple-converted-space"> </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 渲染購物車內容</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function renderCart() {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const container = document.getElementById('cart-items');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (cart.length === 0) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>container.innerHTML = `</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex flex-col items-center justify-center py-20 text-slate-300"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;i data-lucide="shopping-basket" class="w-12 h-12 mb-2 opacity-20"&gt;&lt;/i&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;p class="text-sm font-bold"&gt;尚未選擇商品&lt;/p&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('total-amount').innerText = '$ 0';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('btn-checkout').disabled = true;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>return;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>let total = 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>container.innerHTML = cart.map(item =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>total += item.price * item.qty;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>return `</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-100"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex-1 min-w-0"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="font-bold text-sm text-slate-700 truncate"&gt;${item.name}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;div class="text-[10px] font-mono text-slate-400"&gt;$${item.price}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex items-center bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="updateQty(${item.id}, -1)" class="w-8 h-8 font-black text-slate-400 active:bg-slate-100"&gt;-&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="w-6 text-center text-xs font-black text-indigo-600"&gt;${item.qty}&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;button onclick="updateQty(${item.id}, 1)" class="w-8 h-8 font-black text-slate-400 active:bg-slate-100"&gt;+&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;button onclick="removeFromCart(${item.id})" class="text-slate-300 hover:text-rose-500 p-1"&gt;&lt;i data-lucide="trash-2" class="w-4 h-4"&gt;&lt;/i&gt;&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}).join('');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('total-amount').innerText = `$ ${total}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('btn-checkout').disabled = false;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>calculateChange();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>lucide.createIcons();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function updateQty(id, delta) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const item = cart.find(i =&gt; i.id === id);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (item) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>item.qty += delta;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>if (item.qty &lt;= 0) cart = cart.filter(i =&gt; i.id !== id);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderCart(); updateCartBadge(); renderProducts();<span class="Apple-converted-space"> </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function removeFromCart(id) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>cart = cart.filter(i =&gt; i.id !== id);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderCart(); updateCartBadge(); renderProducts();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function calculateChange() {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const total = parseInt(document.getElementById('total-amount').innerText.replace('$ ', '')) || 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const received = parseInt(document.getElementById('cash-received').value) || 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const changeBox = document.getElementById('change-amount');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (received &gt;= total &amp;&amp; total &gt; 0) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.innerText = `$ ${received - total}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.classList.remove('text-slate-400', 'text-rose-500');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.classList.add('text-emerald-500');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>} else if (received &gt; 0 &amp;&amp; received &lt; total) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.innerText = `-$ ${total - received}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.classList.remove('text-slate-400', 'text-emerald-500');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.classList.add('text-rose-500');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.innerText = `$ 0`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.classList.remove('text-emerald-500', 'text-rose-500');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>changeBox.classList.add('text-slate-400');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 完成結帳</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function checkout() {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const total = parseInt(document.getElementById('total-amount').innerText.replace('$ ', '')) || 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (total === 0) return;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const received = parseInt(document.getElementById('cash-received').value) || 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (received &lt; total) { alert('實收金額不足！'); return; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>// 更新原始庫存</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>cart.forEach(item =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>const prod = products.find(p =&gt; p.id === item.id);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>if (prod) prod.stock -= item.qty;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>});</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>// 存入紀錄</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const record = {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>id: Date.now(),</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>time: new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' }),</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>date: new Date().toLocaleDateString('zh-TW'),</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>items: [...cart],</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>total: total</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>};</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>salesHistory.unshift(record);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>// 寫入本地存儲</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>localStorage.setItem('pos_products', JSON.stringify(products));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>localStorage.setItem('pos_history', JSON.stringify(salesHistory));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>alert(`結帳成功！\n總計: $${total}\n找零: $${received - total}`);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>clearCart();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderProducts();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (document.getElementById('view-cart').classList.contains('expanded')) toggleCart();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 渲染營收紀錄</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function renderHistory() {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const list = document.getElementById('history-list');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const statsContainer = document.getElementById('stats-summary');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>let totalRev = 0;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const stats = {};</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"><span class="Apple-converted-space">            </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>// 處理最近紀錄與統計</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>salesHistory.forEach(h =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>totalRev += h.total;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>h.items.forEach(item =&gt; {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>if (!stats[item.name]) stats[item.name] = { qty: 0, revenue: 0 };</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>stats[item.name].qty += item.qty;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>stats[item.name].revenue += (item.qty * item.price);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>});</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>});</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>// 渲染統計明細</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const sortedStats = Object.entries(stats).sort((a, b) =&gt; b[1].revenue - a[1].revenue);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>statsContainer.innerHTML = sortedStats.length &gt; 0 ? sortedStats.map(([name, data]) =&gt; `</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="p-5 flex justify-between items-center bg-white"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="font-bold text-slate-700"&gt;${name}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter"&gt;累計銷量 ${data.qty}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="text-right"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="font-mono font-black text-indigo-600"&gt;$${data.revenue}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;`).join('') : '&lt;div class="p-20 text-center text-slate-300 font-bold"&gt;尚無統計資料&lt;/div&gt;';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>// 渲染最近交易</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>list.innerHTML = salesHistory.length &gt; 0 ? salesHistory.map(h =&gt; `</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="p-4 flex justify-between items-center"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="min-w-0 flex-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="text-[10px] font-bold text-slate-300"&gt;${h.time}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="text-sm font-bold text-slate-600 truncate"&gt;${h.items.map(i =&gt; `${i.name}x${i.qty}`).join(', ')}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="font-mono font-black text-slate-800 ml-4"&gt;$${h.total}&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;`).join('') : '&lt;div class="p-10 text-center text-slate-300 text-sm font-medium"&gt;尚未有成交紀錄&lt;/div&gt;';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('history-total-revenue').innerText = `$ ${totalRev}`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('history-count').innerText = `共計 ${salesHistory.length} 筆成交`;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>lucide.createIcons();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 管理視圖: 商品列表</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function renderSettings() {<span class="Apple-converted-space"> </span></span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const list = document.getElementById('settings-list');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>list.innerHTML = products.map(p =&gt; `</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="p-5 flex justify-between items-center group bg-white"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex flex-col"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="font-black text-slate-700 leading-tight"&gt;${p.name}&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="flex gap-2 mt-1"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-400 rounded-full"&gt;${p.category}&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 text-indigo-400 rounded-full"&gt;$${p.price}&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="text-[10px] font-bold px-2 py-0.5 ${p.stock &lt; 10 ? 'bg-rose-50 text-rose-400' : 'bg-emerald-50 text-emerald-400'} rounded-full"&gt;庫存: ${p.stock}&lt;/span&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex gap-2"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;button onclick="openProductModal(${p.id})" class="p-3 text-indigo-500 bg-indigo-50 rounded-2xl active:scale-90 transition"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;i data-lucide="edit-3" class="w-4 h-4"&gt;&lt;/i&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;button onclick="deleteProduct(${p.id})" class="p-3 text-rose-400 bg-rose-50 rounded-2xl active:scale-90 transition"&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;i data-lucide="trash-2" class="w-4 h-4"&gt;&lt;/i&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/button&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;`).join('');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>lucide.createIcons();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 彈窗邏輯</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function openProductModal(id = null) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const modal = document.getElementById('product-modal');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const title = document.getElementById('modal-title');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (id) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>const p = products.find(item =&gt; item.id === id);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>title.innerText = '編輯品項資訊';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-id').value = p.id;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-name').value = p.name;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-price').value = p.price;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-stock').value = p.stock;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-category').value = p.category;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>title.innerText = '新增商品品項';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-id').value = '';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-name').value = '';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-price').value = '';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-stock').value = '';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById('edit-category').value = '一般商品';</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>modal.classList.remove('hidden');</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>lucide.createIcons();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function saveProduct() {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const id = document.getElementById('edit-id').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const name = document.getElementById('edit-name').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const price = parseInt(document.getElementById('edit-price').value);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const stock = parseInt(document.getElementById('edit-stock').value);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>const category = document.getElementById('edit-category').value;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (!name || isNaN(price)) { alert('請完整填寫名稱與價格！'); return; }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (id) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>const idx = products.findIndex(p =&gt; p.id == id);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>products[idx] = { id: parseInt(id), name, price, stock, category };</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>} else {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>products.push({ id: Date.now(), name, price, stock, category });</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>localStorage.setItem('pos_products', JSON.stringify(products));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderProducts();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>renderSettings();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>closeProductModal();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function deleteProduct(id) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>if (confirm('確定要刪除此商品嗎？這將無法復原。')) {</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>products = products.filter(p =&gt; p.id !== id);</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>localStorage.setItem('pos_products', JSON.stringify(products));</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>renderProducts();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">                </span>renderSettings();</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">            </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>}</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000; min-height: 28.0px"><span class="s1"></span><br></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>// 工具函式</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function clearHistory() { if(confirm('確定清除所有歷史營收紀錄？')) { salesHistory=[]; localStorage.setItem('pos_history', '[]'); renderHistory(); } }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function toggleCart() { document.getElementById('view-cart').classList.toggle('expanded'); }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function updateCartBadge() { document.getElementById('cart-count-badge').innerText = cart.reduce((s, i) =&gt; s + i.qty, 0); }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">        </span>function clearCart() { cart = []; document.getElementById('cash-received').value = ''; renderCart(); updateCartBadge(); renderProducts(); }</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1">&lt;/body&gt;</span></h1>
-<h1 style="margin: 0.0px 0.0px 16.1px 0.0px; font: 24.0px 'PingFang TC'; -webkit-text-stroke: #000000"><span class="s1">&lt;/html&gt;</span></h1>
+<body class="h-screen flex flex-col overflow-hidden text-slate-800">
+
+    <!-- 頂部導覽列 -->
+    <header class="bg-indigo-700 text-white p-4 shadow-md flex justify-between items-center shrink-0 z-50 pt-[calc(1rem+env(safe-area-inset-top))]">
+        <h1 class="text-lg font-bold flex items-center gap-2">
+            <i data-lucide="store" class="w-5 h-5"></i> 
+            <span>市集 POS</span>
+        </h1>
+        <nav class="flex bg-indigo-800/50 rounded-xl p-1">
+            <button onclick="switchTab('pos')" id="tab-pos" class="px-4 py-1.5 rounded-lg text-sm font-bold transition bg-indigo-600 shadow">結帳</button>
+            <button onclick="switchTab('history')" id="tab-history" class="px-4 py-1.5 rounded-lg text-sm font-bold transition">營收</button>
+            <button onclick="switchTab('settings')" id="tab-settings" class="px-4 py-1.5 rounded-lg text-sm font-bold transition">管理</button>
+        </nav>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="flex-1 relative overflow-hidden flex flex-col md:flex-row">
+        
+        <!-- 左側/中央 主要視窗 -->
+        <div class="flex-1 relative flex flex-col overflow-hidden bg-slate-50">
+            
+            <!-- [結帳] 視圖 -->
+            <section id="view-pos" class="view-section flex-1 p-4 overflow-y-auto no-scrollbar">
+                <div id="product-list-container" class="max-w-4xl mx-auto space-y-8">
+                    <!-- 商品清單由 JS 渲染 -->
+                </div>
+                <!-- 手機版墊高防止被購物車遮擋 -->
+                <div class="h-32 md:hidden"></div>
+            </section>
+
+            <!-- [營收] 視圖 -->
+            <section id="view-history" class="view-section hidden flex-1 p-4 overflow-y-auto no-scrollbar">
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <div id="history-main" class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-xl font-bold">營收概況</h2>
+                            <button onclick="clearHistory()" class="text-xs text-red-500 font-medium">清除紀錄</button>
+                        </div>
+
+                        <!-- 營收大字報 -->
+                        <div class="bg-gradient-to-br from-indigo-600 to-violet-700 text-white p-8 rounded-3xl shadow-lg relative overflow-hidden">
+                            <div class="relative z-10">
+                                <div class="text-indigo-100 text-sm font-medium">今日總營收 (TWD)</div>
+                                <div class="text-5xl font-black font-mono mt-2" id="history-total-revenue">$ 0</div>
+                                <div class="text-xs mt-4 bg-white/20 inline-block px-3 py-1 rounded-full" id="history-count">共 0 筆成交</div>
+                            </div>
+                            <i data-lucide="bar-chart" class="absolute right-[-20px] bottom-[-20px] w-48 h-48 opacity-10"></i>
+                        </div>
+
+                        <!-- 最近交易 & 明細按鈕 -->
+                        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="p-4 bg-slate-50/80 border-b flex justify-between items-center">
+                                <span class="font-bold text-sm flex items-center gap-2">
+                                    <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i> 最近交易
+                                </span>
+                                <button onclick="toggleHistorySubView(true)" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-full active:scale-90 transition">
+                                    查看商品銷售統計
+                                </button>
+                            </div>
+                            <div id="history-list" class="divide-y divide-slate-100">
+                                <!-- 交易紀錄由 JS 渲染 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 品項統計子頁面 -->
+                    <div id="history-detail" class="hidden space-y-4">
+                        <button onclick="toggleHistorySubView(false)" class="flex items-center gap-2 text-slate-500 font-bold text-sm mb-2">
+                            <i data-lucide="chevron-left" class="w-5 h-5"></i> 返回營收概況
+                        </button>
+                        <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                            <div class="p-4 border-b font-bold text-slate-700">商品銷售排行</div>
+                            <div id="stats-summary" class="divide-y divide-slate-50"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- [管理] 視圖 -->
+            <section id="view-settings" class="view-section hidden flex-1 p-4 overflow-y-auto no-scrollbar">
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold">商品庫存管理</h2>
+                        <button onclick="openProductModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-bold shadow-md flex items-center gap-1">
+                            <i data-lucide="plus" class="w-4 h-4"></i> 新增品項
+                        </button>
+                    </div>
+                    
+                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div id="settings-list" class="divide-y divide-slate-100">
+                            <!-- 管理清單由 JS 渲染 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 購物車/結帳面板 -->
+        <aside id="view-cart" class="flex w-full md:w-96 bg-white border-l border-slate-200 flex-col shadow-2xl z-40">
+            <!-- 手機版把手 -->
+            <div onclick="toggleCart()" class="drawer-handle w-full py-2 bg-white flex flex-col items-center cursor-pointer border-b">
+                <div class="w-12 h-1.5 bg-slate-200 rounded-full mb-1"></div>
+                <div class="flex items-center gap-2 text-indigo-700 font-bold text-sm">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                    <span>已選項目</span>
+                    <span id="cart-count-badge" class="bg-rose-500 text-white text-[10px] px-2 py-0.5 rounded-full">0</span>
+                </div>
+            </div>
+
+            <!-- 電腦版標題 -->
+            <div class="hidden md:flex p-5 border-b justify-between items-center">
+                <h2 class="font-bold text-slate-700 flex items-center gap-2">
+                    <i data-lucide="receipt" class="w-5 h-5 text-indigo-500"></i> 結帳清單
+                </h2>
+                <button onclick="clearCart()" class="text-slate-400 text-xs hover:text-rose-500">清空</button>
+            </div>
+            
+            <!-- 購物車品項 -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar" id="cart-items">
+                <!-- 由 JS 渲染 -->
+            </div>
+
+            <!-- 結帳金額區 -->
+            <div class="p-5 bg-slate-50 border-t space-y-4 pb-safe">
+                <div class="space-y-3">
+                    <div class="flex justify-between items-end">
+                        <span class="text-sm font-bold text-slate-500">應收總計</span>
+                        <span id="total-amount" class="text-3xl font-black text-indigo-600 font-mono">$ 0</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="relative group">
+                            <label class="absolute left-3 top-1.5 text-[10px] font-bold text-slate-400 uppercase">實收現鈔</label>
+                            <input type="number" id="cash-received" oninput="calculateChange()" class="w-full bg-white border-2 border-slate-200 pt-6 pb-2 px-3 rounded-2xl text-xl font-mono outline-none focus:border-indigo-500 transition-colors" inputmode="numeric" placeholder="0">
+                        </div>
+                        <div class="relative bg-slate-200/50 rounded-2xl px-3 pt-6 pb-2 border-2 border-transparent">
+                            <label class="absolute left-3 top-1.5 text-[10px] font-bold text-slate-400 uppercase">找零金額</label>
+                            <div id="change-amount" class="text-xl font-mono text-slate-400 font-black">$ 0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btn-checkout" onclick="checkout()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl text-xl font-bold shadow-lg shadow-indigo-200 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale" disabled>
+                    完成結帳
+                </button>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 彈窗: 商品編輯/新增 -->
+    <div id="product-modal" class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center p-4 z-[100] backdrop-blur-sm">
+        <div class="bg-white p-6 rounded-[32px] max-w-md w-full shadow-2xl space-y-6 relative animate-in fade-in zoom-in duration-200">
+             <div class="flex justify-between items-center">
+                 <h3 id="modal-title" class="text-xl font-bold text-slate-800">編輯商品</h3>
+                 <button onclick="closeProductModal()" class="text-slate-400 p-1 hover:bg-slate-100 rounded-full"><i data-lucide="x" class="w-6 h-6"></i></button>
+             </div>
+
+             <div class="space-y-4">
+                 <input type="hidden" id="edit-id">
+                 <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-1">品項名稱</label>
+                    <input type="text" id="edit-name" class="w-full border-2 border-slate-100 p-3 rounded-2xl outline-none focus:border-indigo-500 bg-slate-50 font-medium">
+                 </div>
+                 
+                 <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-400 ml-1">定價 (TWD)</label>
+                        <input type="number" id="edit-price" class="w-full border-2 border-slate-100 p-3 rounded-2xl outline-none focus:border-indigo-500 bg-slate-50 font-mono font-bold" inputmode="numeric">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-400 ml-1">初始庫存</label>
+                        <input type="number" id="edit-stock" class="w-full border-2 border-slate-100 p-3 rounded-2xl outline-none focus:border-indigo-500 bg-slate-50 font-mono font-bold" inputmode="numeric">
+                    </div>
+                 </div>
+
+                 <div class="space-y-1">
+                    <label class="text-xs font-bold text-slate-400 ml-1">商品分類 (群組)</label>
+                    <input type="text" id="edit-category" placeholder="例如：手沖、甜點、周邊" class="w-full border-2 border-slate-100 p-3 rounded-2xl outline-none focus:border-indigo-500 bg-slate-50 font-medium">
+                 </div>
+
+                 <div class="pt-4">
+                     <button onclick="saveProduct()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition">儲存變更</button>
+                 </div>
+             </div>
+        </div>
+    </div>
+
+    <script>
+        // 核心資料狀態
+        let products = JSON.parse(localStorage.getItem('pos_products')) || [
+            { id: 1, name: '招牌拿鐵', price: 120, category: '精選飲品', stock: 99 },
+            { id: 2, name: '美式咖啡', price: 90, category: '精選飲品', stock: 99 },
+            { id: 3, name: '巧克力布朗尼', price: 85, category: '手作甜點', stock: 12 },
+            { id: 4, name: '單品手沖', price: 160, category: '精選飲品', stock: 20 }
+        ];
+        let salesHistory = JSON.parse(localStorage.getItem('pos_history')) || [];
+        let cart = [];
+
+        // 初始化
+        window.onload = () => {
+            renderProducts();
+            renderSettings();
+            renderHistory();
+            updateCartBadge();
+            lucide.createIcons();
+        };
+
+        // 導覽切換
+        function switchTab(tab) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('bg-indigo-600', 'shadow'));
+            document.getElementById(`tab-${tab}`).classList.add('bg-indigo-600', 'shadow');
+            
+            const cartEl = document.getElementById('view-cart');
+            if (tab === 'pos') {
+                cartEl.classList.remove('hidden');
+                cartEl.classList.add('flex');
+            } else {
+                cartEl.classList.remove('flex');
+                cartEl.classList.add('hidden');
+            }
+            
+            if(tab === 'history') {
+                toggleHistorySubView(false);
+                renderHistory();
+            }
+            if(tab === 'settings') renderSettings();
+            lucide.createIcons();
+        }
+
+        // 營收統計視窗切換
+        function toggleHistorySubView(showDetail) {
+            const main = document.getElementById('history-main');
+            const detail = document.getElementById('history-detail');
+            if (showDetail) {
+                main.classList.add('hidden');
+                detail.classList.remove('hidden');
+            } else {
+                main.classList.remove('hidden');
+                detail.classList.add('hidden');
+            }
+            lucide.createIcons();
+        }
+
+        // 渲染結帳頁面商品
+        function renderProducts() {
+            const container = document.getElementById('product-list-container');
+            container.innerHTML = '';
+            
+            const groups = products.reduce((acc, p) => {
+                const cat = p.category || '未分類';
+                if (!acc[cat]) acc[cat] = [];
+                acc[cat].push(p);
+                return acc;
+            }, {});
+
+            Object.keys(groups).sort().forEach(group => {
+                const section = document.createElement('div');
+                section.className = 'space-y-4';
+                section.innerHTML = `
+                    <div class="flex items-center gap-3 px-1">
+                        <div class="h-4 w-1 bg-indigo-500 rounded-full"></div>
+                        <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest">${group}</h3>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        ${groups[group].map(p => {
+                            const inCart = cart.some(item => item.id === p.id);
+                            const outOfStock = p.stock <= 0;
+                            return `
+                            <button onclick="${outOfStock ? '' : `toggleProductSelection(${p.id})`}" 
+                                class="active-scale text-left p-4 rounded-3xl border-2 transition-all flex flex-col justify-between h-32 relative overflow-hidden
+                                ${inCart ? 'bg-indigo-50 border-indigo-500 ring-2 ring-indigo-200' : 'bg-white border-slate-100 hover:border-indigo-200 shadow-sm'}
+                                ${outOfStock ? 'opacity-40 grayscale cursor-not-allowed border-slate-200 bg-slate-100' : ''}">
+                                
+                                <div class="font-bold text-slate-700 leading-tight">${p.name}</div>
+                                
+                                <div class="flex items-end justify-between">
+                                    <div class="font-mono font-black text-xl ${inCart ? 'text-indigo-600' : 'text-slate-800'}">$${p.price}</div>
+                                    <div class="text-[10px] font-bold ${p.stock < 10 ? 'text-rose-500' : 'text-slate-300'}">存貨 ${p.stock}</div>
+                                </div>
+
+                                ${inCart ? '<div class="absolute top-2 right-2 text-indigo-500"><i data-lucide="check-circle-2" class="w-5 h-5"></i></div>' : ''}
+                                ${outOfStock ? '<div class="absolute inset-0 flex items-center justify-center bg-slate-100/50 font-black text-slate-400 text-xs rotate-[-15deg] pointer-events-none">SOLD OUT</div>' : ''}
+                            </button>`;
+                        }).join('')}
+                    </div>`;
+                container.appendChild(section);
+            });
+            lucide.createIcons();
+        }
+
+        // 結帳功能: 選擇商品
+        function toggleProductSelection(pid) {
+            const prod = products.find(p => p.id === pid);
+            const index = cart.findIndex(i => i.id === pid);
+            if (index > -1) {
+                cart.splice(index, 1);
+            } else {
+                cart.push({ ...prod, qty: 1 });
+            }
+            if (window.navigator.vibrate) window.navigator.vibrate(10);
+            renderCart();
+            updateCartBadge();
+            renderProducts(); 
+        }
+
+        // 渲染購物車內容
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-20 text-slate-300">
+                        <i data-lucide="shopping-basket" class="w-12 h-12 mb-2 opacity-20"></i>
+                        <p class="text-sm font-bold">尚未選擇商品</p>
+                    </div>`;
+                document.getElementById('total-amount').innerText = '$ 0';
+                document.getElementById('btn-checkout').disabled = true;
+                return;
+            }
+
+            let total = 0;
+            container.innerHTML = cart.map(item => {
+                total += item.price * item.qty;
+                return `
+                    <div class="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-sm text-slate-700 truncate">${item.name}</div>
+                            <div class="text-[10px] font-mono text-slate-400">$${item.price}</div>
+                        </div>
+                        <div class="flex items-center bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                            <button onclick="updateQty(${item.id}, -1)" class="w-8 h-8 font-black text-slate-400 active:bg-slate-100">-</button>
+                            <span class="w-6 text-center text-xs font-black text-indigo-600">${item.qty}</span>
+                            <button onclick="updateQty(${item.id}, 1)" class="w-8 h-8 font-black text-slate-400 active:bg-slate-100">+</button>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-slate-300 hover:text-rose-500 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    </div>`;
+            }).join('');
+            
+            document.getElementById('total-amount').innerText = `$ ${total}`;
+            document.getElementById('btn-checkout').disabled = false;
+            calculateChange();
+            lucide.createIcons();
+        }
+
+        function updateQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            }
+            renderCart(); updateCartBadge(); renderProducts(); 
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i.id !== id);
+            renderCart(); updateCartBadge(); renderProducts();
+        }
+
+        function calculateChange() {
+            const total = parseInt(document.getElementById('total-amount').innerText.replace('$ ', '')) || 0;
+            const received = parseInt(document.getElementById('cash-received').value) || 0;
+            const changeBox = document.getElementById('change-amount');
+            
+            if (received >= total && total > 0) {
+                changeBox.innerText = `$ ${received - total}`;
+                changeBox.classList.remove('text-slate-400', 'text-rose-500');
+                changeBox.classList.add('text-emerald-500');
+            } else if (received > 0 && received < total) {
+                changeBox.innerText = `-$ ${total - received}`;
+                changeBox.classList.remove('text-slate-400', 'text-emerald-500');
+                changeBox.classList.add('text-rose-500');
+            } else {
+                changeBox.innerText = `$ 0`;
+                changeBox.classList.remove('text-emerald-500', 'text-rose-500');
+                changeBox.classList.add('text-slate-400');
+            }
+        }
+
+        // 完成結帳
+        function checkout() {
+            const total = parseInt(document.getElementById('total-amount').innerText.replace('$ ', '')) || 0;
+            if (total === 0) return;
+            const received = parseInt(document.getElementById('cash-received').value) || 0;
+            if (received < total) { alert('實收金額不足！'); return; }
+
+            // 更新原始庫存
+            cart.forEach(item => {
+                const prod = products.find(p => p.id === item.id);
+                if (prod) prod.stock -= item.qty;
+            });
+
+            // 存入紀錄
+            const record = {
+                id: Date.now(),
+                time: new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' }),
+                date: new Date().toLocaleDateString('zh-TW'),
+                items: [...cart],
+                total: total
+            };
+            salesHistory.unshift(record);
+            
+            // 寫入本地存儲
+            localStorage.setItem('pos_products', JSON.stringify(products));
+            localStorage.setItem('pos_history', JSON.stringify(salesHistory));
+            
+            alert(`結帳成功！\n總計: $${total}\n找零: $${received - total}`);
+            
+            clearCart();
+            renderProducts();
+            if (document.getElementById('view-cart').classList.contains('expanded')) toggleCart();
+        }
+
+        // 渲染營收紀錄
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            const statsContainer = document.getElementById('stats-summary');
+            let totalRev = 0;
+            const stats = {};
+            
+            // 處理最近紀錄與統計
+            salesHistory.forEach(h => {
+                totalRev += h.total;
+                h.items.forEach(item => {
+                    if (!stats[item.name]) stats[item.name] = { qty: 0, revenue: 0 };
+                    stats[item.name].qty += item.qty;
+                    stats[item.name].revenue += (item.qty * item.price);
+                });
+            });
+
+            // 渲染統計明細
+            const sortedStats = Object.entries(stats).sort((a, b) => b[1].revenue - a[1].revenue);
+            statsContainer.innerHTML = sortedStats.length > 0 ? sortedStats.map(([name, data]) => `
+                <div class="p-5 flex justify-between items-center bg-white">
+                    <div>
+                        <div class="font-bold text-slate-700">${name}</div>
+                        <div class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">累計銷量 ${data.qty}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-mono font-black text-indigo-600">$${data.revenue}</div>
+                    </div>
+                </div>`).join('') : '<div class="p-20 text-center text-slate-300 font-bold">尚無統計資料</div>';
+
+            // 渲染最近交易
+            list.innerHTML = salesHistory.length > 0 ? salesHistory.map(h => `
+                <div class="p-4 flex justify-between items-center">
+                    <div class="min-w-0 flex-1">
+                        <div class="text-[10px] font-bold text-slate-300">${h.time}</div>
+                        <div class="text-sm font-bold text-slate-600 truncate">${h.items.map(i => `${i.name}x${i.qty}`).join(', ')}</div>
+                    </div>
+                    <div class="font-mono font-black text-slate-800 ml-4">$${h.total}</div>
+                </div>`).join('') : '<div class="p-10 text-center text-slate-300 text-sm font-medium">尚未有成交紀錄</div>';
+
+            document.getElementById('history-total-revenue').innerText = `$ ${totalRev}`;
+            document.getElementById('history-count').innerText = `共計 ${salesHistory.length} 筆成交`;
+            lucide.createIcons();
+        }
+
+        // 管理視圖: 商品列表
+        function renderSettings() { 
+            const list = document.getElementById('settings-list');
+            list.innerHTML = products.map(p => `
+                <div class="p-5 flex justify-between items-center group bg-white">
+                    <div class="flex flex-col">
+                        <span class="font-black text-slate-700 leading-tight">${p.name}</span>
+                        <div class="flex gap-2 mt-1">
+                            <span class="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-400 rounded-full">${p.category}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 text-indigo-400 rounded-full">$${p.price}</span>
+                            <span class="text-[10px] font-bold px-2 py-0.5 ${p.stock < 10 ? 'bg-rose-50 text-rose-400' : 'bg-emerald-50 text-emerald-400'} rounded-full">庫存: ${p.stock}</span>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="openProductModal(${p.id})" class="p-3 text-indigo-500 bg-indigo-50 rounded-2xl active:scale-90 transition">
+                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="deleteProduct(${p.id})" class="p-3 text-rose-400 bg-rose-50 rounded-2xl active:scale-90 transition">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>`).join('');
+            lucide.createIcons();
+        }
+
+        // 彈窗邏輯
+        function openProductModal(id = null) {
+            const modal = document.getElementById('product-modal');
+            const title = document.getElementById('modal-title');
+            if (id) {
+                const p = products.find(item => item.id === id);
+                title.innerText = '編輯品項資訊';
+                document.getElementById('edit-id').value = p.id;
+                document.getElementById('edit-name').value = p.name;
+                document.getElementById('edit-price').value = p.price;
+                document.getElementById('edit-stock').value = p.stock;
+                document.getElementById('edit-category').value = p.category;
+            } else {
+                title.innerText = '新增商品品項';
+                document.getElementById('edit-id').value = '';
+                document.getElementById('edit-name').value = '';
+                document.getElementById('edit-price').value = '';
+                document.getElementById('edit-stock').value = '';
+                document.getElementById('edit-category').value = '一般商品';
+            }
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function saveProduct() {
+            const id = document.getElementById('edit-id').value;
+            const name = document.getElementById('edit-name').value;
+            const price = parseInt(document.getElementById('edit-price').value);
+            const stock = parseInt(document.getElementById('edit-stock').value);
+            const category = document.getElementById('edit-category').value;
+
+            if (!name || isNaN(price)) { alert('請完整填寫名稱與價格！'); return; }
+
+            if (id) {
+                const idx = products.findIndex(p => p.id == id);
+                products[idx] = { id: parseInt(id), name, price, stock, category };
+            } else {
+                products.push({ id: Date.now(), name, price, stock, category });
+            }
+
+            localStorage.setItem('pos_products', JSON.stringify(products));
+            renderProducts();
+            renderSettings();
+            closeProductModal();
+        }
+
+        function deleteProduct(id) {
+            if (confirm('確定要刪除此商品嗎？這將無法復原。')) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem('pos_products', JSON.stringify(products));
+                renderProducts();
+                renderSettings();
+            }
+        }
+
+        // 工具函式
+        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
+        function clearHistory() { if(confirm('確定清除所有歷史營收紀錄？')) { salesHistory=[]; localStorage.setItem('pos_history', '[]'); renderHistory(); } }
+        function toggleCart() { document.getElementById('view-cart').classList.toggle('expanded'); }
+        function updateCartBadge() { document.getElementById('cart-count-badge').innerText = cart.reduce((s, i) => s + i.qty, 0); }
+        function clearCart() { cart = []; document.getElementById('cash-received').value = ''; renderCart(); updateCartBadge(); renderProducts(); }
+    </script>
 </body>
 </html>
